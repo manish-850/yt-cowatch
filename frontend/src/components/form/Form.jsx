@@ -1,11 +1,29 @@
 import './form.css';
-
+import { useContext } from 'react';
+import userContext from '../../context/userContext';
+import roomContext from '../../context/roomContext';
+import { generateRoomId } from '../../utils/roomId';
 
 const Form = () => {
+  const { username, setUsername} = useContext(userContext);
+  const { roomId, setRoomId, setIsJoined } = useContext(roomContext);
+
+  const handleJoin = (e) => {
+    e.preventDefault();
+    if (roomId.trim() && username.trim()) {
+      setIsJoined(true);
+    }
+  };
+
+  const handleCreateRoom = () => {
+    const randomId = generateRoomId(); 
+    setRoomId(randomId);
+  };
+
   return (
     <div className="join-container">
       <form 
-    //   onSubmit={handleJoin} 
+      onSubmit={handleJoin} 
       className="card">
         <h1>YouTube Co-Watch</h1>
         <div className="input-group">
@@ -13,8 +31,8 @@ const Form = () => {
           <input
             type="text"
             required
-            // value={username}
-            // onChange={(e) => setUsername(e.target.value)}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             placeholder="Enter your name"
           />
         </div>
@@ -24,14 +42,14 @@ const Form = () => {
             <input
               type="text"
               required
-            //   value={roomId}
-            //   onChange={(e) => setRoomId(e.target.value)}
+              value={roomId}
+              onChange={(e) => setRoomId(e.target.value)}
               placeholder="Enter Room ID"
               style={{ flex: 1 }}
             />
             <button
               type="button"
-              //   onClick={handleCreateRoom}
+              onClick={handleCreateRoom}
               className="btn-secondary"
             >
               Generate

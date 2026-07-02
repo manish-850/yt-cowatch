@@ -56,18 +56,6 @@ export default function App() {
     return () => clearInterval(interval);
   }, [socket, player, roomData?.currentVideoId]);
 
-  const handleJoin = (e) => {
-    e.preventDefault();
-    if (roomId.trim() && username.trim()) {
-      setIsJoined(true);
-    }
-  };
-
-  const handleCreateRoom = () => {
-    const randomId = Math.random().toString(36).substring(2, 8).toUpperCase();
-    setRoomId(randomId);
-  };
-
   const handleLeave = () => {
     if (socket) socket.disconnect();
     setSocket(null);
