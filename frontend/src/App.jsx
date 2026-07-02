@@ -1,204 +1,45 @@
-import React, { useState, useEffect } from "react";
-import { io } from "socket.io-client";
-import { Users, LogOut, Volume2, VolumeX, Shield } from "lucide-react";
-import VideoPlayer from "./components/VideoPlayer";
-import Chat from "./components/Chat";
-import RoomControls from "./components/RoomControls";
+import React, { useState, useEffect, useContext } from "react";
+import Chat from "./components/chat/Chat";
+import Form from "./components/form/Form";
+import Loading from "./components/Loading/Loading";
+import VideoContainer from "./components/videoPlayer/VideoContainer";
+import { RoomDataContext } from "./context/RoomContext";
+import { PlayerDataContext } from "./context/PlayerContext";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+import useSocket from "./hooks/useSocket";
+import useVideoUpdate from "./hooks/useVideoUpdate";
 
 export default function App() {
-  const [roomId, setRoomId] = useState("");
-  const [username, setUsername] = useState("");
-  const [isJoined, setIsJoined] = useState(false);
-  const [socket, setSocket] = useState(null);
-  const [roomData, setRoomData] = useState(null);
-  const [messages, setMessages] = useState([]);
-  const [player, setPlayer] = useState(null);
-  const [isMuted, setIsMuted] = useState(true);
+  const {
+    isJoined,
+    setIsJoined,
+    roomId,
+    setRoomId,
+    roomData,
+    setRoomData,
+    messages,
+    setMessages,
+    username,
+    setUsername,
+  } = useContext(RoomDataContext);
+  const { player, setPlayer, isMuted, setIsMuted } = useContext(PlayerDataContext);
+ 
 
-  useEffect(() => {
-    if (!isJoined) return;
-    const s = io(BACKEND_URL, {
-      transports: ["websocket"]
-    });
-    setSocket(s);
-    s.emit("join-room", { roomId, username });
-    s.on("room-update", (data) => {
-      setRoomData({ ...data, receivedAt: Date.now() });
-    });
-    s.on("chat-message", (msg) => {
-      setMessages((prev) => [...prev, msg]);
-    });
-    return () => {
-      s.disconnect();
-    };
-  }, [isJoined]);
-
-  useEffect(() => {
-    if (!socket || !player) return;
-    const interval = setInterval(() => {
-      if (typeof player.getCurrentTime === "function" && typeof player.getPlayerState === "function") {
-        const state = player.getPlayerState();
-        socket.emit("report-status", {
-          videoId: roomData?.currentVideoId || "6KcV1C1Ui5s",
-          isPlaying: state === 1,
-          currentTime: player.getCurrentTime()
-        });
-      }
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [socket, player, roomData?.currentVideoId]);
-
-  const handleJoin = (e) => {
-    e.preventDefault();
-    if (roomId.trim() && username.trim()) {
-      setIsJoined(true);
-    }
-  };
-
-  const handleCreateRoom = () => {
-    const randomId = Math.random().toString(36).substring(2, 8).toUpperCase();
-    setRoomId(randomId);
-  };
-
-  const handleLeave = () => {
-    if (socket) socket.disconnect();
-    setSocket(null);
-    setRoomData(null);
-    setMessages([]);
-    setPlayer(null);
-    setIsMuted(true);
-    setIsJoined(false);
-  };
-
-  const handlePlayerReady = (playerInst) => {
-    setPlayer(playerInst);
-    if (!isAdmin) {
-      playerInst.mute();
-    }
-    if (roomData) {
-      playerInst.seekTo(roomData.currentTime, true);
-      if (roomData.isPlaying) {
-        playerInst.playVideo();
-      } else {
-        playerInst.pauseVideo();
-      }
-    }
-  };
-
-  const handlePlaybackControl = (isPlaying, currentTime) => {
-    if (socket) {
-      socket.emit("playback-control", { isPlaying, currentTime });
-    }
-  };
-
-  const handleChangeVideo = (videoId) => {
-    if (socket) {
-      socket.emit("change-video", { videoId });
-    }
-  };
-
-  const handleSendMessage = (text) => {
-    if (socket) {
-      socket.emit("send-message", { text });
-    }
-  };
-
-  const toggleMute = () => {
-    if (player && typeof player.mute === "function") {
-      if (isMuted) {
-        player.unMute();
-        setIsMuted(false);
-      } else {
-        player.mute();
-        setIsMuted(true);
-      }
-    }
-  };
-
-  const currentUser = roomData?.users.find((u) => u.id === socket?.id);
-  const isAdmin = currentUser?.isAdmin || false;
+  useSocket(setRoomData, setMessages, roomId, username,isJoined);
+  useVideoUpdate(player, roomData);
 
   if (!isJoined) {
-    return (
-      <div className="join-container">
-        <form onSubmit={handleJoin} className="card">
-          <h1>YouTube Co-Watch</h1>
-          <div className="input-group">
-            <label>Username</label>
-            <input
-              type="text"
-              required
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Enter your name"
-            />
-          </div>
-          <div className="input-group">
-            <label>Room ID</label>
-            <div style={{ display: "flex", gap: "0.5rem" }}>
-              <input
-                type="text"
-                required
-                value={roomId}
-                onChange={(e) => setRoomId(e.target.value)}
-                placeholder="Enter Room ID"
-                style={{ flex: 1 }}
-              />
-              <button type="button" onClick={handleCreateRoom} className="btn-secondary">
-                Generate
-              </button>
-            </div>
-          </div>
-          <button type="submit">Join Room</button>
-        </form>
-      </div>
-    );
+    return <Form />;
   }
 
   if (!roomData) {
-    return (
-      <div className="join-container">
-        <div className="card" style={{ alignItems: "center" }}>
-          <h2>Connecting to room...</h2>
-        </div>
-      </div>
-    );
+    return <Loading />;
   }
 
   return (
     <div className="app-container">
-      <div className="main-content">
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <h2>Room: {roomId}</h2>
-          <div style={{ display: "flex", gap: "0.5rem" }}>
-            <button onClick={toggleMute} className="btn-secondary" style={{ padding: "0.5rem" }}>
-              {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-            </button>
-            <button onClick={handleLeave} className="btn-secondary" style={{ padding: "0.5rem" }}>
-              <LogOut size={18} />
-            </button>
-          </div>
-        </div>
-
-        <VideoPlayer
-          videoId={roomData?.currentVideoId || "6KcV1C1Ui5s"}
-          socket={socket}
-          onPlayerReady={handlePlayerReady}
-          isAdmin={isAdmin}
-          roomData={roomData}
-          onAdminPlaybackControl={handlePlaybackControl}
-        />
-
-        {isAdmin && (
-          <RoomControls
-            onChangeVideo={handleChangeVideo}
-          />
-        )}
-
-      </div>
-      <Chat messages={messages} onSendMessage={handleSendMessage} roomData={roomData} />
+      <VideoContainer />
+      <Chat />
     </div>
   );
 }

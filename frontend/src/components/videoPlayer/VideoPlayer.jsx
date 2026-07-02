@@ -1,4 +1,6 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
+import "./VideoPlayer.css";
+
 
 export default function VideoPlayer({
   videoId,
