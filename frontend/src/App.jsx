@@ -1,17 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Chat from "./components/chat/Chat";
 import Form from "./components/form/Form";
 import Loading from "./components/Loading/Loading";
 import VideoContainer from "./components/videoPlayer/VideoContainer";
-import { useContext } from "react";
-import { UserDataContext } from "./context/UserContext";
 import { RoomDataContext } from "./context/RoomContext";
 import { PlayerDataContext } from "./context/PlayerContext";
 import { SocketDataContext } from "./context/SocketContext";
 import { initSocket, updateVideo } from "./services/socket";
 
 export default function App() {
-  const { username, setUsername } = useContext(UserDataContext);
   const {
     isJoined,
     setIsJoined,
@@ -21,6 +18,8 @@ export default function App() {
     setRoomData,
     messages,
     setMessages,
+    username,
+    setUsername,
   } = useContext(RoomDataContext);
   const { player, setPlayer, isMuted, setIsMuted } = useContext(PlayerDataContext);
   const { socket, setSocket } = useContext(SocketDataContext);

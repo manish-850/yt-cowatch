@@ -7,6 +7,7 @@ const RoomContext = ({ children }) => {
   const [roomId, setRoomId] = useState("");
   const [roomData, setRoomData] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [username, setUsername] = useState("");
 
   return (
     <RoomDataContext.Provider
@@ -18,7 +19,9 @@ const RoomContext = ({ children }) => {
         roomData,
         setRoomData,
         messages,
-        setMessages
+        setMessages,
+        username,
+        setUsername,
       }}
     >
       {children}

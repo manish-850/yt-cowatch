@@ -1,7 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { Send, Users, Shield } from "lucide-react";
 import "./Chat.css";
-import { useContext } from "react";
 import { RoomDataContext } from "../../context/RoomContext";
 import { SocketDataContext } from "../../context/SocketContext";
 import { handleSendMessage } from "../../services/socket";
