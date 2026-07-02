@@ -53,3 +53,13 @@ export const handleSendMessage = (text) => {
   if (!socket || !socket.connected) return;
   socket.emit("send-message", { text });
 };
+
+export const disconnectSocket = (setRoomData, setMessages, setPlayer, setIsMuted, setIsJoined) => {
+    if (socket) socket.disconnect();
+    socket = null;
+    setRoomData(null);
+    setMessages([]);
+    setPlayer(null);
+    setIsMuted(true);
+    setIsJoined(false);
+}

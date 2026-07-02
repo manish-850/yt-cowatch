@@ -5,10 +5,10 @@ import RoomControls from "./RoomControls";
 import { useContext } from "react";
 import { RoomDataContext } from "../../context/RoomContext";
 import { PlayerDataContext } from "../../context/PlayerContext";
-import { socket } from "../../services/socket";
+import { socket , disconnectSocket } from "../../services/socket";
 
 const VideoContainer = () => {
-  const { roomId, roomData, setRoomData } = useContext(RoomDataContext);
+  const { roomId, roomData, setRoomData, setMessages,setIsJoined } = useContext(RoomDataContext);
   const { player, setPlayer, isMuted, setIsMuted } = useContext(PlayerDataContext);
 
   const currentUser = roomData?.users.find((u) => u.id === socket?.id);
@@ -27,13 +27,7 @@ const VideoContainer = () => {
   };
 
   const handleLeave = () => {
-    if (socket) socket.disconnect();
-    socket = null;
-    setRoomData(null);
-    setMessages([]);
-    setPlayer(null);
-    setIsMuted(true);
-    setIsJoined(false);
+    disconnectSocket(setRoomData, setMessages, setPlayer, setIsMuted, setIsJoined);
   };
 
   const handlePlayerReady = (playerInst) => {
