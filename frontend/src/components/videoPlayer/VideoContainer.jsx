@@ -2,9 +2,70 @@ import { Volume2, VolumeX, LogOut } from "lucide-react";
 import './VideoPlayer.css'
 import VideoPlayer from './VideoPlayer';
 import RoomControls from "../RoomControls";
-
+import { useContext } from "react";
+import { RoomDataContext } from "../../context/RoomContext";
+import { PlayerDataContext } from "../../context/PlayerContext";
+import { SocketDataContext } from "../../context/SocketContext";
 
 const VideoContainer = () => {
+  const { roomId, roomData, setRoomData } = useContext(RoomDataContext);
+  const { player, setPlayer, isMuted, setIsMuted } = useContext(PlayerDataContext);
+  const { socket, setSocket } = useContext(SocketDataContext);
+
+  const currentUser = roomData?.users.find((u) => u.id === socket?.id);
+  const isAdmin = currentUser?.isAdmin || false;
+
+  const toggleMute = () => {
+    if (player && typeof player.mute === "function") {
+      if (isMuted) {
+        player.unMute();
+        setIsMuted(false);
+      } else {
+        player.mute();
+        setIsMuted(true);
+      }
+    }
+  };
+
+  const handleLeave = () => {
+    if (socket) socket.disconnect();
+    setSocket(null);
+    setRoomData(null);
+    setMessages([]);
+    setPlayer(null);
+    setIsMuted(true);
+    setIsJoined(false);
+  };
+
+  const handlePlayerReady = (playerInst) => {
+    setPlayer(playerInst);
+    if (!isAdmin) {
+      playerInst.mute();
+    }
+    if (roomData) {
+      playerInst.seekTo(roomData.currentTime, true);
+      if (roomData.isPlaying) {
+        playerInst.playVideo();
+      } else {
+        playerInst.pauseVideo();
+      }
+    }
+  };
+
+  const handlePlaybackControl = (isPlaying, currentTime) => {
+    if (socket) {
+      socket.emit("playback-control", { isPlaying, currentTime });
+    }
+  };
+
+  const handleChangeVideo = (videoId) => {
+    if (socket) {
+      socket.emit("change-video", { videoId });
+    }
+  };
+
+
+
   return (
     <div className="main-content">
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>

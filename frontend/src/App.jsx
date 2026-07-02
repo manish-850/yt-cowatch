@@ -4,6 +4,11 @@ import Chat from "./components/chat/Chat";
 import Form from "./components/form/Form";
 import Loading from "./components/Loading/Loading";
 import VideoContainer from "./components/videoPlayer/VideoContainer";
+import { useContext } from "react";
+import { UserDataContext } from "./context/UserContext";
+import { RoomDataContext } from "./context/RoomContext";
+import { PlayerDataContext } from "./context/PlayerContext";
+import { SocketDataContext } from "./context/SocketContext";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
@@ -20,7 +25,13 @@ export default function App() {
   // const [player, setPlayer] = useState(null);
   // const [isMuted, setIsMuted] = useState(true);
 
-  const [socket, setSocket] = useState(null);
+  // socket state
+  // const [socket, setSocket] = useState(null);
+
+  const { username, setUsername } = useContext(UserDataContext);
+  const { isJoined, setIsJoined, roomId, setRoomId, roomData, setRoomData } = useContext(RoomDataContext);
+  const { player, setPlayer, isMuted, setIsMuted } = useContext(PlayerDataContext);
+  const { socket, setSocket } = useContext(SocketDataContext);
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
@@ -56,63 +67,12 @@ export default function App() {
     return () => clearInterval(interval);
   }, [socket, player, roomData?.currentVideoId]);
 
-  const handleLeave = () => {
-    if (socket) socket.disconnect();
-    setSocket(null);
-    setRoomData(null);
-    setMessages([]);
-    setPlayer(null);
-    setIsMuted(true);
-    setIsJoined(false);
-  };
-
-  const handlePlayerReady = (playerInst) => {
-    setPlayer(playerInst);
-    if (!isAdmin) {
-      playerInst.mute();
-    }
-    if (roomData) {
-      playerInst.seekTo(roomData.currentTime, true);
-      if (roomData.isPlaying) {
-        playerInst.playVideo();
-      } else {
-        playerInst.pauseVideo();
-      }
-    }
-  };
-
-  const handlePlaybackControl = (isPlaying, currentTime) => {
-    if (socket) {
-      socket.emit("playback-control", { isPlaying, currentTime });
-    }
-  };
-
-  const handleChangeVideo = (videoId) => {
-    if (socket) {
-      socket.emit("change-video", { videoId });
-    }
-  };
 
   const handleSendMessage = (text) => {
     if (socket) {
       socket.emit("send-message", { text });
     }
   };
-
-  const toggleMute = () => {
-    if (player && typeof player.mute === "function") {
-      if (isMuted) {
-        player.unMute();
-        setIsMuted(false);
-      } else {
-        player.mute();
-        setIsMuted(true);
-      }
-    }
-  };
-
-  const currentUser = roomData?.users.find((u) => u.id === socket?.id);
-  const isAdmin = currentUser?.isAdmin || false;
 
   if (!isJoined) {
     return (

@@ -1,12 +1,12 @@
-import './form.css';
-import { useContext } from 'react';
-import userContext from '../../context/userContext';
-import roomContext from '../../context/roomContext';
-import { generateRoomId } from '../../utils/roomId';
+import "./form.css";
+import { useContext } from "react";
+import { UserDataContext } from "../../context/userContext";
+import { RoomDataContext } from "../../context/roomContext";
+import { generateRoomId } from "../../utils/roomId";
 
 const Form = () => {
-  const { username, setUsername} = useContext(userContext);
-  const { roomId, setRoomId, setIsJoined } = useContext(roomContext);
+  const { username, setUsername } = useContext(UserDataContext);
+  const { roomId, setRoomId, setIsJoined } = useContext(RoomDataContext);
 
   const handleJoin = (e) => {
     e.preventDefault();
@@ -16,15 +16,13 @@ const Form = () => {
   };
 
   const handleCreateRoom = () => {
-    const randomId = generateRoomId(); 
+    const randomId = generateRoomId();
     setRoomId(randomId);
   };
 
   return (
     <div className="join-container">
-      <form 
-      onSubmit={handleJoin} 
-      className="card">
+      <form onSubmit={handleJoin} className="card">
         <h1>YouTube Co-Watch</h1>
         <div className="input-group">
           <label>Username</label>
