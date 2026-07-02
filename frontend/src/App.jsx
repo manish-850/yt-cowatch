@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 import { Users, LogOut, Volume2, VolumeX, Shield } from "lucide-react";
 import VideoPlayer from "./components/VideoPlayer";
-import Chat from "./components/Chat";
+import Chat from "./components/chat/Chat";
 import RoomControls from "./components/RoomControls";
+import Form from "./components/form/Form";
+import Loading from "./components/Loading/Loading";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
@@ -122,48 +124,13 @@ export default function App() {
 
   if (!isJoined) {
     return (
-      <div className="join-container">
-        <form onSubmit={handleJoin} className="card">
-          <h1>YouTube Co-Watch</h1>
-          <div className="input-group">
-            <label>Username</label>
-            <input
-              type="text"
-              required
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Enter your name"
-            />
-          </div>
-          <div className="input-group">
-            <label>Room ID</label>
-            <div style={{ display: "flex", gap: "0.5rem" }}>
-              <input
-                type="text"
-                required
-                value={roomId}
-                onChange={(e) => setRoomId(e.target.value)}
-                placeholder="Enter Room ID"
-                style={{ flex: 1 }}
-              />
-              <button type="button" onClick={handleCreateRoom} className="btn-secondary">
-                Generate
-              </button>
-            </div>
-          </div>
-          <button type="submit">Join Room</button>
-        </form>
-      </div>
+      <Form />
     );
   }
 
   if (!roomData) {
     return (
-      <div className="join-container">
-        <div className="card" style={{ alignItems: "center" }}>
-          <h2>Connecting to room...</h2>
-        </div>
-      </div>
+      <Loading />
     );
   }
 
