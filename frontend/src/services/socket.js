@@ -50,9 +50,6 @@ export const updateVideo = (player, roomData) => {
 };
 
 export const handleSendMessage = (text) => {
-  //   if (socket) {
-  //     socket.emit("send-message", { text });
-  //       }
   if (!socket || !socket.connected) return;
   socket.emit("send-message", { text });
 };

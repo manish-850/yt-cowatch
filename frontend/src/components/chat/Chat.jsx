@@ -3,7 +3,6 @@ import { Send, Users, Shield } from "lucide-react";
 import "./Chat.css";
 import { RoomDataContext } from "../../context/RoomContext";
 import { handleSendMessage } from "../../services/socket";
-import{socket} from "../../services/socket";
 
 export default function Chat({ onSendMessage }) {
   const [text, setText] = useState("");
@@ -19,7 +18,7 @@ export default function Chat({ onSendMessage }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!text.trim()) return;
-    handleSendMessage(socket,text);
+    handleSendMessage(text);
     setText("");
   };
 
