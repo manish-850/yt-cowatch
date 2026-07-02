@@ -44,27 +44,6 @@ body {
   flex: 1;
 }
 
-.join-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  padding: 1rem;
-}
-
-.card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 2rem;
-  width: 100%;
-  max-width: 400px;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
 h1 {
   font-size: 1.5rem;
   font-weight: 600;
@@ -166,110 +145,6 @@ button:disabled {
     height: auto;
     overflow: auto;
   }
-}
-
-.main-content {
-  display: flex;
-  flex-direction: column;
-  padding: 1.5rem;
-  gap: 1.5rem;
-  overflow-y: auto;
-}
-
-.player-container {
-  position: relative;
-  width: 100%;
-  padding-top: 56.25%;
-  background: #000;
-  border-radius: var(--radius);
-  overflow: hidden;
-  border: 1px solid var(--border);
-}
-
-.player-container iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: 0;
-}
-
-.chat-container {
-  background: var(--card);
-  border-left: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-@media (max-width: 768px) {
-  .chat-container {
-    border-left: none;
-    border-top: 1px solid var(--border);
-    height: 400px;
-  }
-}
-
-.chat-header {
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.chat-messages {
-  flex: 1;
-  padding: 1.5rem;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.message {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.message-sender {
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--muted-foreground);
-}
-
-.message-text {
-  background: #18181b;
-  border: 1px solid var(--border);
-  padding: 0.5rem 0.75rem;
-  border-radius: var(--radius);
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  display: inline-block;
-  max-width: 95%;
-  word-break: break-word;
-}
-
-.message.system .message-text {
-  background: transparent;
-  border: none;
-  color: var(--muted-foreground);
-  font-style: italic;
-  padding: 0;
-  font-size: 0.75rem;
-}
-
-.chat-input-form {
-  padding: 1rem 1.5rem;
-  border-top: 1px solid var(--border);
-  display: flex;
-  gap: 0.5rem;
-}
-
-.chat-input-form input {
-  flex: 1;
 }
 
 .controls-card {

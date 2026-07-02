@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 import { Users, LogOut, Volume2, VolumeX, Shield } from "lucide-react";
-import VideoPlayer from "./components/VideoPlayer";
+import VideoPlayer from "./components/videoPlayer/VideoPlayer";
 import Chat from "./components/chat/Chat";
 import RoomControls from "./components/RoomControls";
 import Form from "./components/form/Form";

@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Send, Users, Shield } from "lucide-react";
+import "./Chat.css";
 
 export default function Chat({ messages, onSendMessage, roomData }) {
   const [text, setText] = useState("");
