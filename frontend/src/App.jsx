@@ -8,14 +8,20 @@ import VideoContainer from "./components/videoPlayer/VideoContainer";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
 export default function App() {
-  const [roomId, setRoomId] = useState("");
-  const [username, setUsername] = useState("");
-  const [isJoined, setIsJoined] = useState(false);
+  // user context
+  // const [username, setUsername] = useState("");
+
+  // room context
+  // const [isJoined, setIsJoined] = useState(false);
+  // const [roomId, setRoomId] = useState("");
+  // const [roomData, setRoomData] = useState(null);
+  
+  // player context
+  // const [player, setPlayer] = useState(null);
+  // const [isMuted, setIsMuted] = useState(true);
+
   const [socket, setSocket] = useState(null);
-  const [roomData, setRoomData] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [player, setPlayer] = useState(null);
-  const [isMuted, setIsMuted] = useState(true);
 
   useEffect(() => {
     if (!isJoined) return;
