@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { io } from "socket.io-client";
-import { Users, LogOut, Volume2, VolumeX, Shield } from "lucide-react";
-import VideoPlayer from "./components/videoPlayer/VideoPlayer";
 import Chat from "./components/chat/Chat";
-import RoomControls from "./components/RoomControls";
 import Form from "./components/form/Form";
 import Loading from "./components/Loading/Loading";
+import VideoContainer from "./components/videoPlayer/VideoContainer";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
@@ -136,35 +134,7 @@ export default function App() {
 
   return (
     <div className="app-container">
-      <div className="main-content">
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <h2>Room: {roomId}</h2>
-          <div style={{ display: "flex", gap: "0.5rem" }}>
-            <button onClick={toggleMute} className="btn-secondary" style={{ padding: "0.5rem" }}>
-              {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-            </button>
-            <button onClick={handleLeave} className="btn-secondary" style={{ padding: "0.5rem" }}>
-              <LogOut size={18} />
-            </button>
-          </div>
-        </div>
-
-        <VideoPlayer
-          videoId={roomData?.currentVideoId || "6KcV1C1Ui5s"}
-          socket={socket}
-          onPlayerReady={handlePlayerReady}
-          isAdmin={isAdmin}
-          roomData={roomData}
-          onAdminPlaybackControl={handlePlaybackControl}
-        />
-
-        {isAdmin && (
-          <RoomControls
-            onChangeVideo={handleChangeVideo}
-          />
-        )}
-
-      </div>
+      <VideoContainer/>
       <Chat messages={messages} onSendMessage={handleSendMessage} roomData={roomData} />
     </div>
   );
