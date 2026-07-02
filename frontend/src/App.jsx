@@ -24,7 +24,6 @@ export default function App() {
   } = useContext(RoomDataContext);
   const { player, setPlayer, isMuted, setIsMuted } = useContext(PlayerDataContext);
   const { socket, setSocket } = useContext(SocketDataContext);
-
   useEffect(() => {
     if (!isJoined) return;
     initSocket(socket, setSocket, setRoomData, setMessages, roomId, username);
