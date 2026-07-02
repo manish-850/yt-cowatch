@@ -2,14 +2,13 @@ import { useState, useEffect, useRef, useContext } from "react";
 import { Send, Users, Shield } from "lucide-react";
 import "./Chat.css";
 import { RoomDataContext } from "../../context/RoomContext";
-import { SocketDataContext } from "../../context/SocketContext";
 import { handleSendMessage } from "../../services/socket";
+import{socket} from "../../services/socket";
 
 export default function Chat({ onSendMessage }) {
   const [text, setText] = useState("");
   const messagesEndRef = useRef(null);
 
-  const { socket } = useContext(SocketDataContext);
   const { roomData, messages } = useContext(RoomDataContext);
 
   useEffect(() => {

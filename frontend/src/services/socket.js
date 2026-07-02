@@ -1,36 +1,38 @@
 import { io } from "socket.io-client";
 
-export const socketInst = () => {
-  return io(import.meta.env.VITE_BACKEND_URL || "http://localhost:5000", {
-    transports: ["websocket"],
-  });
-};
+export let socket = null;
 
-export const initSocket = (
-  socket,
-  setSocket,
-  setRoomData,
-  setMessages,
-  roomId,
-  username,
-) => {
-  const s = io(import.meta.env.VITE_BACKEND_URL || "http://localhost:5000", {
-    transports: ["websocket"],
-  });
-  setSocket(s);
-  s.emit("join-room", { roomId, username });
-  s.on("room-update", (data) => {
+export function getSocket() {
+  if (!socket) {
+    socket = io(import.meta.env.VITE_BACKEND_URL);
+  }
+  return socket;
+}
+
+export const initSocket = (setRoomData, setMessages, roomId, username) => {
+  const handleRoomUpdate = (data) => {
     setRoomData({ ...data, receivedAt: Date.now() });
-  });
-  s.on("chat-message", (msg) => {
+  };
+
+  const handleChat = (msg) => {
     setMessages((prev) => [...prev, msg]);
-  });
+  };
+
+  getSocket();
+  socket.emit("join-room", { roomId, username });
+  socket.on("room-update", handleRoomUpdate);
+  socket.on("chat-message", handleChat);
+
   return () => {
-    s.disconnect();
+    socket.off("room-update", handleRoomUpdate);
+    socket.off("chat-message", handleChat);
+    socket.disconnect();
+    socket = null;
   };
 };
 
-export const updateVideo = (socket, player, roomData) => {
+export const updateVideo = (player, roomData) => {
+  if (!socket || !socket.connected) return;
   const interval = setInterval(() => {
     if (
       typeof player.getCurrentTime === "function" &&
@@ -47,8 +49,10 @@ export const updateVideo = (socket, player, roomData) => {
   return () => clearInterval(interval);
 };
 
-export const handleSendMessage = (socket, text) => {
-  if (socket) {
-    socket.emit("send-message", { text });
-  }
+export const handleSendMessage = (text) => {
+  //   if (socket) {
+  //     socket.emit("send-message", { text });
+  //       }
+  if (!socket || !socket.connected) return;
+  socket.emit("send-message", { text });
 };

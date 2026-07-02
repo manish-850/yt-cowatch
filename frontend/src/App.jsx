@@ -5,8 +5,9 @@ import Loading from "./components/Loading/Loading";
 import VideoContainer from "./components/videoPlayer/VideoContainer";
 import { RoomDataContext } from "./context/RoomContext";
 import { PlayerDataContext } from "./context/PlayerContext";
-import { SocketDataContext } from "./context/SocketContext";
-import { initSocket, updateVideo } from "./services/socket";
+
+import useSocket from "./hooks/useSocket";
+import useVideoUpdate from "./hooks/useVideoUpdate";
 
 export default function App() {
   const {
@@ -22,16 +23,10 @@ export default function App() {
     setUsername,
   } = useContext(RoomDataContext);
   const { player, setPlayer, isMuted, setIsMuted } = useContext(PlayerDataContext);
-  const { socket, setSocket } = useContext(SocketDataContext);
-  useEffect(() => {
-    if (!isJoined) return;
-    initSocket(socket, setSocket, setRoomData, setMessages, roomId, username);
-  }, [isJoined]);
+ 
 
-  useEffect(() => {
-    if (!socket || !player) return;
-    updateVideo(socket, player,roomData);
-  }, [socket, player, roomData?.currentVideoId]);
+  useSocket(setRoomData, setMessages, roomId, username,isJoined);
+  useVideoUpdate(player, roomData);
 
   if (!isJoined) {
     return <Form />;
