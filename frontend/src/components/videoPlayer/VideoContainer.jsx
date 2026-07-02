@@ -29,7 +29,6 @@ const VideoContainer = () => {
 
   const handleLeave = () => {
     if (socket) socket.disconnect();
-    // socket.close();
     setSocket(null);
     setRoomData(null);
     setMessages([]);

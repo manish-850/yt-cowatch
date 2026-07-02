@@ -1,12 +1,10 @@
 import "./form.css";
 import { useContext } from "react";
-import { UserDataContext } from "../../context/userContext";
 import { RoomDataContext } from "../../context/roomContext";
 import { generateRoomId } from "../../utils/roomId";
 
 const Form = () => {
-  const { username, setUsername } = useContext(UserDataContext);
-  const { roomId, setRoomId, setIsJoined } = useContext(RoomDataContext);
+  const { roomId, setRoomId, setIsJoined, username, setUsername } = useContext(RoomDataContext);
 
   const handleJoin = (e) => {
     e.preventDefault();
