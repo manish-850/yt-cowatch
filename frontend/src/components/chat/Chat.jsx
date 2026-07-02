@@ -1,21 +1,30 @@
 import { useState, useEffect, useRef } from "react";
 import { Send, Users, Shield } from "lucide-react";
 import "./Chat.css";
+import { useContext } from "react";
+import { RoomDataContext } from "../../context/RoomContext";
+import { SocketDataContext } from "../../context/SocketContext";
+import { handleSendMessage } from "../../services/socket";
 
-export default function Chat({ messages, onSendMessage, roomData }) {
+export default function Chat({ onSendMessage }) {
   const [text, setText] = useState("");
   const messagesEndRef = useRef(null);
+
+  const { socket } = useContext(SocketDataContext);
+  const { roomData, messages } = useContext(RoomDataContext);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!text.trim()) return;
-    onSendMessage(text);
+    handleSendMessage(socket,text);
     setText("");
   };
+
 
   return (
     <div className="chat-container">
@@ -49,7 +58,7 @@ export default function Chat({ messages, onSendMessage, roomData }) {
         <h3>Room Chat</h3>
       </div>
       <div className="chat-messages">
-        {messages.map((msg, index) => {
+        {messages && messages.map((msg, index) => {
           const isSystem = msg.sender === "System";
           return (
             <div key={index} className={`message ${isSystem ? "system" : ""}`}>
