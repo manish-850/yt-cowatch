@@ -50,8 +50,9 @@ src/
 ## Getting Started
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/manish-850/yt-cowatch.git
 cd yt-cowatch
+cd frontend
 npm install
 npm run dev
 ```
@@ -59,7 +60,7 @@ npm run dev
 Start backend:
 
 ```bash
-cd server
+cd backend
 npm install
 npm start
 ```
