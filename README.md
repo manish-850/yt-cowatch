@@ -1,74 +1,82 @@
 # YouTube Co-Watch
 
-A real-time co-watching platform that allows synchronized YouTube video playback and interactive group chat. The system features latency compensation, active synchronization diagnostics, administrative control structures, and a premium dark-themed user interface.
+A real-time YouTube watch party application built with **React**, **Node.js**, **Express**, **Socket.IO**, and the **YouTube IFrame API**.
 
-## Architecture Flowchart
+> **Acknowledgement**
+> This project is based on the open-source project **yt-cowatch** by GitUtk and has been extensively refactored with a new architecture and ongoing feature improvements.
 
-![Architecture Flowchart](./assets/image.png)
+## Features
 
-## Technologies Used
+- Real-time synchronized YouTube playback
+- Multi-user watch rooms
+- Live chat
+- Shared room synchronization
+- Responsive interface
 
-![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
-![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
-![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
-![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)
-![Socket.io](https://img.shields.io/badge/Socket.io-black?style=for-the-badge&logo=socket.io&badgeColor=010101)
-![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
-![YouTube API](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)
-![Vercel](https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white)
+## Tech Stack
 
----
+**Frontend**
+- React
+- Vite
+- Context API
+- Socket.IO Client
 
-## Key Features
+**Backend**
+- Node.js
+- Express
+- Socket.IO
 
-*   **Real-time Playback Synchronization**: Simultaneous video play, pause, and seek events across all viewers in a room.
-*   **Latency-Compensated Time Alignment**: Epoch-time offset logic automatically positions joining or buffering users to the exact playback frame of the active room.
-*   **Active Sync Diagnostics**: Clients report status (timestamp, state) periodically, and the server computes synchronization health to show real-time green/red connection badges for active viewers.
-*   **Role-Based Authority (Admin Controls)**: The room creator acts as the administrator with exclusive playback control (via standard player timeline/bar). Joined members are locked to watch-only mode with custom overlay restrictions.
-*   **Integrated Group Chat**: Seamless real-time chat updates to communicate during video sessions, including system notification events.
+## Folder Structure
 
----
+```text
+src/
+├── components/
+├── context/
+├── hooks/
+├── services/
+├── utils/
+└── assets/
+```
 
-## Installation & Setup
+## Improvements
 
-### Prerequisites
-*   Node.js (v18+)
-*   npm or yarn
+- Modular component architecture
+- Custom React hooks
+- Dedicated socket service
+- Better separation of concerns
+- Cleaner state management
+- Improved maintainability
 
-### 1. Backend Setup
-1. Navigate to the backend directory:
-   ```bash
-   cd backend
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Configure environment variables. Create a `.env` file:
-   ```env
-   PORT=5000
-   FRONTEND_URL=http://localhost:5173
-   ```
-4. Start the development server:
-   ```bash
-   npm run dev
-   ```
+## Getting Started
 
-### 2. Frontend Setup
-1. Navigate to the frontend directory:
-   ```bash
-   cd ../frontend
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Configure environment variables. Create a `.env` file:
-   ```env
-   VITE_BACKEND_URL=http://localhost:5000
-   ```
-4. Start the development server:
-   ```bash
-   npm run dev
-   ```
+```bash
+git clone <repository-url>
+cd yt-cowatch
+npm install
+npm run dev
+```
 
+Start backend:
+
+```bash
+cd server
+npm install
+npm start
+```
+
+## Roadmap
+
+- Authentication
+- Video queue
+- Room permissions
+- Persistent chat
+- Theme support
+- Docker
+- Tests
+
+## Credits
+
+Original project:
+https://github.com/GitUtk/yt-cowatch
+
+This repository continues development with significant architectural improvements and additional features.
