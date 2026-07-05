@@ -15,6 +15,7 @@ export const initSocket = (
   roomId,
   username,
   setIsLoading,
+  clientId
 ) => {
   const handleRoomUpdate = (data) => {
     setRoomData({ ...data, receivedAt: Date.now() });
@@ -26,7 +27,7 @@ export const initSocket = (
   };
 
   getSocket();
-  socket.emit("join-room", { roomId, username });
+  socket.emit("join-room", { roomId, username, clientId });
   socket.on("room-update", handleRoomUpdate);
   socket.on("chat-message", handleChat);
 

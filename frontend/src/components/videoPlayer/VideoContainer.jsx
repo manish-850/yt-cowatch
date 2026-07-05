@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 
 const VideoContainer = () => {
   const navigate = useNavigate();
-  const { roomId, roomData, setRoomData, setMessages, setIsJoined } =
+  const { roomId, roomData, setRoomData, setMessages, setIsJoined, setIsLoading } =
     useContext(RoomDataContext);
   const { player, setPlayer, isMuted, setIsMuted } =
     useContext(PlayerDataContext);
@@ -20,7 +20,8 @@ const VideoContainer = () => {
     if (isLeaved) return navigate("/");
   }, [isLeaved]);
 
-  const currentUser = roomData?.users.find((u) => u.id === socket?.id);
+  const clientId = localStorage.getItem("clientId");
+  const currentUser = roomData?.users.find((u) => u.clientId === clientId);
   const isAdmin = currentUser?.isAdmin || false;
 
   const toggleMute = () => {
@@ -38,11 +39,12 @@ const VideoContainer = () => {
   const handleLeave = () => {
     disconnectSocket();
     setIsLeaved(true);
-    // setRoomData(null);
-    // setMessages([]);
-    // setPlayer(null);
-    // setIsMuted(true);
+    setRoomData(null);
+    setMessages([]);
+    setPlayer(null);
+    setIsMuted(true);
     setIsJoined(false);
+    setIsLoading(false);
   };
 
   const handlePlayerReady = (playerInst) => {
@@ -94,7 +96,7 @@ const VideoContainer = () => {
           <button
             onClick={handleLeave}
             className="btn-secondary"
-            style={{ padding: "0.5rem" }}
+            style={{ padding: "0.5rem", backgroundColor: "var(--destructive)" }}
           >
             <LogOut size={18} />
           </button>

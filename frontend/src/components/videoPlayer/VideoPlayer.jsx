@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./VideoPlayer.css";
 
 
@@ -15,6 +15,7 @@ export default function VideoPlayer({
   const onAdminPlaybackControlRef = useRef(onAdminPlaybackControl);
   const hasSyncedRef = useRef(false);
   const iframeId = "yt-player";
+  // const [isPlayerReady, setIsPlayerReady] = useState(false);
 
   useEffect(() => {
     roomDataRef.current = roomData;
@@ -49,6 +50,7 @@ export default function VideoPlayer({
     let player;
 
     function initPlayer() {
+      console.log("Creating player");
       player = new window.YT.Player(iframeId, {
         videoId: videoId,
         playerVars: {
@@ -62,7 +64,9 @@ export default function VideoPlayer({
         },
         events: {
           onReady: (event) => {
+            console.log("YT READY");
             playerRef.current = event.target;
+            // setIsPlayerReady(true);
             if (onPlayerReady) {
               onPlayerReady(event.target);
             }
@@ -117,13 +121,29 @@ export default function VideoPlayer({
     };
   }, [isAdmin]);
 
+  // useEffect(() => {
+  //   if (!roomData) return;
+  //   hasSyncedRef.current = false;
+  //   const player = playerRef.current;
+  //   if (player && typeof player.loadVideoById === "function" && videoId) {
+  //     player?.loadVideoById({ videoId });
+  //   }
+  // }, [playerRef.current]);
   useEffect(() => {
-    hasSyncedRef.current = false;
-    const player = playerRef.current;
-    if (player && typeof player.loadVideoById === "function" && videoId) {
-      player?.loadVideoById({ videoId });
-    }
-  }, [videoId]);
+  console.log("videoId changed:", videoId);
+
+  if (!roomData) return;
+
+  hasSyncedRef.current = false;
+  const player = playerRef.current;
+
+  console.log("player:", player);
+
+  if (player && typeof player.loadVideoById === "function") {
+    console.log("Loading video:", videoId);
+    player.loadVideoById({ videoId });
+  }
+}, [videoId,playerRef.current]);
 
   useEffect(() => {
     if (!socket) return;

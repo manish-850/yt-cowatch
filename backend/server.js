@@ -23,6 +23,16 @@ app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok" });
 });
 
+app.get("/api/room/:id",(req, res)=>{
+    const roomId = req.params.id;
+    const room = getOrCreateRoom(roomId);
+
+    console.log(room);
+    res.status(200).json({
+      ...room, users: Array.from(room.users.values())
+    })
+})
+
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
@@ -35,12 +45,12 @@ io.on("connection", (socket) => {
   let currentRoomId = null;
   let currentUsername = null;
 
-  socket.on("join-room", ({ roomId, username }) => {
+  socket.on("join-room", ({ roomId, username, clientId }) => {
     currentRoomId = roomId;
     currentUsername = username;
     
     socket.join(roomId);
-    const { room } = addUserToRoom(roomId, socket.id, username);
+    const { room } = addUserToRoom(roomId, socket.id, username, clientId);
     
     io.to(roomId).emit("room-update", getRoomData(room));
     io.to(roomId).emit("chat-message", {

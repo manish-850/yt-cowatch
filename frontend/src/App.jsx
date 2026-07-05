@@ -14,14 +14,15 @@ export default function App() {
     setRoomData,
     setMessages,
     username,
-    setIsLoading
+    setIsLoading,
   } = useContext(RoomDataContext);
   const { player } = useContext(PlayerDataContext);
- 
-  useSocket(setRoomData, setMessages, roomId, username, isJoined, setIsLoading);
+
+  const clientId = localStorage.getItem("clientId") ?? crypto.randomUUID();
+  localStorage.setItem("clientId", clientId);
+
+  useSocket(setRoomData, setMessages, roomId, username, isJoined, setIsLoading, clientId);
   useVideoUpdate(player, roomData);
 
-  return(
-    <AppRoutes />
-  )
+  return <AppRoutes />;
 }

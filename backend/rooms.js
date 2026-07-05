@@ -21,11 +21,17 @@ export function deleteRoomIfEmpty(roomId) {
   }
 }
 
-export function addUserToRoom(roomId, socketId, username) {
+export function addUserToRoom(roomId, socketId, username, clientId) {
   const room = getOrCreateRoom(roomId);
   const isAdmin = room.users.size === 0;
-  const user = { id: socketId, username, isAdmin };
-  room.users.set(socketId, user);
+  console.log("clientId in addUserToRoom:", clientId);
+  let user = room.users.get(clientId);
+  if(user){
+    user.id = socketId;
+    user.username = username;
+  } else {
+    room.users.set(clientId, { id: socketId, username, isAdmin, clientId });
+  }
   return { room, user };
 }
 
