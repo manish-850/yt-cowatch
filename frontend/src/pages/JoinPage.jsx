@@ -10,7 +10,8 @@ const JoinPage = () => {
 
   useEffect(() => {
     if (isJoined && !isLoading && roomData) navigate(`/room/${roomId}`);
-  },[isJoined,isLoading,roomData])
+  }, [isJoined, isLoading, roomData]);
+
   if (isLoading) return <Loading />;
   if (!isLoading && !isJoined) return <Form />;
 };

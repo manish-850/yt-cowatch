@@ -46,7 +46,7 @@ export const updateVideo = (player, roomData) => {
       typeof player.getPlayerState === "function"
     ) {
       const state = player.getPlayerState();
-      socket.emit("report-status", {
+      socket?.emit("report-status", {
         videoId: roomData?.currentVideoId || "6KcV1C1Ui5s",
         isPlaying: state === 1,
         currentTime: player.getCurrentTime(),
@@ -61,18 +61,9 @@ export const handleSendMessage = (text) => {
   socket.emit("send-message", { text });
 };
 
-export const disconnectSocket = (
-  setRoomData,
-  setMessages,
-  setPlayer,
-  setIsMuted,
-  setIsJoined,
-) => {
-  if (socket) socket.disconnect();
-  socket = null;
-  setRoomData(null);
-  setMessages([]);
-  setPlayer(null);
-  setIsMuted(true);
-  setIsJoined(false);
+export const disconnectSocket = () => {
+  if (socket) {
+    socket.disconnect();
+    socket = null;
+  }
 };

@@ -147,11 +147,7 @@ button:disabled {
   }
 }
 
-.controls-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.25rem;
+.load-video-container {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;

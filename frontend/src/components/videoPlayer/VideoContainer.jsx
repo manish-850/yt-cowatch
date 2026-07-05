@@ -7,12 +7,18 @@ import { RoomDataContext } from "../../context/RoomContext";
 import { PlayerDataContext } from "../../context/PlayerContext";
 import { socket, disconnectSocket } from "../../services/socket";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const VideoContainer = () => {
   const navigate = useNavigate();
-  const { roomId, roomData, setRoomData, setMessages, setIsJoined } = useContext(RoomDataContext);
-  const { player, setPlayer, isMuted, setIsMuted } = useContext(PlayerDataContext);
+  const { roomId, roomData, setRoomData, setMessages, setIsJoined } =
+    useContext(RoomDataContext);
+  const { player, setPlayer, isMuted, setIsMuted } =
+    useContext(PlayerDataContext);
+  const [isLeaved, setIsLeaved] = useState(false);
+  useEffect(() => {
+    if (isLeaved) return navigate("/");
+  }, [isLeaved]);
 
   const currentUser = roomData?.users.find((u) => u.id === socket?.id);
   const isAdmin = currentUser?.isAdmin || false;
@@ -30,16 +36,13 @@ const VideoContainer = () => {
   };
 
   const handleLeave = () => {
-    disconnectSocket(
-      setRoomData,
-      setMessages,
-      setPlayer,
-      setIsMuted,
-      setIsJoined,
-    );
-    useEffect(()=>{
-      navigate("/");
-    })
+    disconnectSocket();
+    setIsLeaved(true);
+    // setRoomData(null);
+    // setMessages([]);
+    // setPlayer(null);
+    // setIsMuted(true);
+    setIsJoined(false);
   };
 
   const handlePlayerReady = (playerInst) => {
@@ -79,6 +82,7 @@ const VideoContainer = () => {
         }}
       >
         <h2>Room: {roomId}</h2>
+        {isAdmin && <RoomControls onChangeVideo={handleChangeVideo} />}
         <div style={{ display: "flex", gap: "0.5rem" }}>
           <button
             onClick={toggleMute}
@@ -105,8 +109,6 @@ const VideoContainer = () => {
         roomData={roomData}
         onAdminPlaybackControl={handlePlaybackControl}
       />
-
-      {isAdmin && <RoomControls onChangeVideo={handleChangeVideo} />}
     </div>
   );
 };

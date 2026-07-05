@@ -120,8 +120,8 @@ export default function VideoPlayer({
   useEffect(() => {
     hasSyncedRef.current = false;
     const player = playerRef.current;
-    if (player && typeof player.loadVideoById === "function") {
-      player.loadVideoById({ videoId });
+    if (player && typeof player.loadVideoById === "function" && videoId) {
+      player?.loadVideoById({ videoId });
     }
   }, [videoId]);
 

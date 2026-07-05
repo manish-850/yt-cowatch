@@ -21,11 +21,11 @@ export default function RoomControls({ onChangeVideo }) {
   };
 
   return (
-    <div className="controls-card">
+    <div className="load-video-container">
       <form onSubmit={handleVideoSubmit} className="url-input-group">
         <input
           type="text"
-          placeholder="Paste YouTube Video ID or URL"
+          placeholder="YT Video ID or URL"
           value={videoInput}
           onChange={(e) => setVideoInput(e.target.value)}
         />
