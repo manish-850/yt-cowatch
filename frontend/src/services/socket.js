@@ -9,9 +9,16 @@ export function getSocket() {
   return socket;
 }
 
-export const initSocket = (setRoomData, setMessages, roomId, username) => {
+export const initSocket = (
+  setRoomData,
+  setMessages,
+  roomId,
+  username,
+  setIsLoading,
+) => {
   const handleRoomUpdate = (data) => {
     setRoomData({ ...data, receivedAt: Date.now() });
+    setIsLoading(false);
   };
 
   const handleChat = (msg) => {
@@ -54,12 +61,18 @@ export const handleSendMessage = (text) => {
   socket.emit("send-message", { text });
 };
 
-export const disconnectSocket = (setRoomData, setMessages, setPlayer, setIsMuted, setIsJoined) => {
-    if (socket) socket.disconnect();
-    socket = null;
-    setRoomData(null);
-    setMessages([]);
-    setPlayer(null);
-    setIsMuted(true);
-    setIsJoined(false);
-}
+export const disconnectSocket = (
+  setRoomData,
+  setMessages,
+  setPlayer,
+  setIsMuted,
+  setIsJoined,
+) => {
+  if (socket) socket.disconnect();
+  socket = null;
+  setRoomData(null);
+  setMessages([]);
+  setPlayer(null);
+  setIsMuted(true);
+  setIsJoined(false);
+};

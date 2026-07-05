@@ -4,11 +4,12 @@ import { RoomDataContext } from "../../context/roomContext";
 import { generateRoomId } from "../../utils/roomId";
 
 const Form = () => {
-  const { roomId, setRoomId, setIsJoined, username, setUsername } = useContext(RoomDataContext);
+  const { roomId, setRoomId, setIsJoined, username, setUsername, isLoading, setIsLoading } = useContext(RoomDataContext);
 
   const handleJoin = (e) => {
     e.preventDefault();
     if (roomId.trim() && username.trim()) {
+      setIsLoading(true);
       setIsJoined(true);
     }
   };

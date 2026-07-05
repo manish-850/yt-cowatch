@@ -5,10 +5,13 @@ import RoomControls from "./RoomControls";
 import { useContext } from "react";
 import { RoomDataContext } from "../../context/RoomContext";
 import { PlayerDataContext } from "../../context/PlayerContext";
-import { socket , disconnectSocket } from "../../services/socket";
+import { socket, disconnectSocket } from "../../services/socket";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const VideoContainer = () => {
-  const { roomId, roomData, setRoomData, setMessages,setIsJoined } = useContext(RoomDataContext);
+  const navigate = useNavigate();
+  const { roomId, roomData, setRoomData, setMessages, setIsJoined } = useContext(RoomDataContext);
   const { player, setPlayer, isMuted, setIsMuted } = useContext(PlayerDataContext);
 
   const currentUser = roomData?.users.find((u) => u.id === socket?.id);
@@ -27,7 +30,16 @@ const VideoContainer = () => {
   };
 
   const handleLeave = () => {
-    disconnectSocket(setRoomData, setMessages, setPlayer, setIsMuted, setIsJoined);
+    disconnectSocket(
+      setRoomData,
+      setMessages,
+      setPlayer,
+      setIsMuted,
+      setIsJoined,
+    );
+    useEffect(()=>{
+      navigate("/");
+    })
   };
 
   const handlePlayerReady = (playerInst) => {
