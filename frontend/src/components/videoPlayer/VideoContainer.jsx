@@ -72,6 +72,7 @@ const VideoContainer = () => {
 
   const handleChangeVideo = (videoId) => {
     if (socket) {
+      console.log("VC, handlechangevideo : ",videoId)
       socket.emit("change-video", { videoId });
     }
   };
