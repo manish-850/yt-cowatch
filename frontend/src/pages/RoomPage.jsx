@@ -1,46 +1,40 @@
 import VideoContainer from "../components/videoPlayer/VideoContainer";
 import Chat from "../components/chat/Chat";
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
-import { useContext } from "react";
 import { RoomDataContext } from "../context/RoomContext";
-import { PlayerDataContext } from "../context/PlayerContext";
+import { socket } from "../services/socket";
 
 const RoomPage = () => {
   const { roomId } = useParams();
   const {
-    isJoined,
     setIsJoined,
     setRoomData,
-    setMessages,
-    username,
     setUsername,
     setIsLoading,
     setRoomId,
   } = useContext(RoomDataContext);
-  const { player, setPlayer } = useContext(PlayerDataContext);
   useEffect(() => {
     const fetchRoom = async () => {
       try {
         setIsLoading(true);
         const res = await fetch(`http://localhost:5000/api/room/${roomId}`);
         const data = await res.json();
-        const currentUser = data.users.find(
+        const currentUser = data.roomData.users.find(
           (user) => user.clientId === localStorage.getItem("clientId"),
         );
-
-        if (!currentUser) {
-          // Redirect or show "You are not part of this room"
-          setIsLoading(false);
-          return;
-        }
+        console.log(data);
         setUsername(currentUser.username);
-        setRoomId(data.id);
-        setRoomData({ ...data, receivedAt: Date.now() });
+        setRoomId(data.roomData.id);
+        setRoomData({
+          ...data.roomData,
+          receivedAt: data.receivedAt,
+        });
         setIsJoined(true);
-        setIsLoading(false);
       } catch (err) {
         console.error(err);
+      } finally{
+        setIsLoading(false);
       }
     };
 

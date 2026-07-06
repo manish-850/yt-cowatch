@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { RoomDataContext } from "./context/RoomContext";
 import { PlayerDataContext } from "./context/PlayerContext";
 
-import useSocket from "./hooks/useSocket";
+import useSocket from "./hooks/socket/useSocket";
 import useVideoUpdate from "./hooks/useVideoUpdate";
 import AppRoutes from "./routes/AppRoutes";
 

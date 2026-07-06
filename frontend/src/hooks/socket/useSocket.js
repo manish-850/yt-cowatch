@@ -1,4 +1,4 @@
- import { initSocket} from "../services/socket";
+ import { initSocket} from "../../services/socket";
  import { useEffect } from "react";
  const useSocket = ( setRoomData, setMessages, roomId, username, isJoined,setIsLoading, clientId) => {
     useEffect(() => {

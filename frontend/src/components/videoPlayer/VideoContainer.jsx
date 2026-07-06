@@ -23,6 +23,7 @@ const VideoContainer = () => {
   const clientId = localStorage.getItem("clientId");
   const currentUser = roomData?.users.find((u) => u.clientId === clientId);
   const isAdmin = currentUser?.isAdmin || false;
+  console.log("video container : ",roomData);
 
   const toggleMute = () => {
     if (player && typeof player.mute === "function") {
@@ -45,6 +46,7 @@ const VideoContainer = () => {
     setIsMuted(true);
     setIsJoined(false);
     setIsLoading(false);
+    localStorage.removeItem("clientId");
   };
 
   const handlePlayerReady = (playerInst) => {

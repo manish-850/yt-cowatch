@@ -15,7 +15,6 @@ export default function VideoPlayer({
   const onAdminPlaybackControlRef = useRef(onAdminPlaybackControl);
   const hasSyncedRef = useRef(false);
   const iframeId = "yt-player";
-  // const [isPlayerReady, setIsPlayerReady] = useState(false);
 
   useEffect(() => {
     roomDataRef.current = roomData;
@@ -121,14 +120,6 @@ export default function VideoPlayer({
     };
   }, [isAdmin]);
 
-  // useEffect(() => {
-  //   if (!roomData) return;
-  //   hasSyncedRef.current = false;
-  //   const player = playerRef.current;
-  //   if (player && typeof player.loadVideoById === "function" && videoId) {
-  //     player?.loadVideoById({ videoId });
-  //   }
-  // }, [playerRef.current]);
   useEffect(() => {
   console.log("videoId changed:", videoId);
 

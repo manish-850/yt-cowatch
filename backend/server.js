@@ -26,10 +26,11 @@ app.get("/health", (req, res) => {
 app.get("/api/room/:id",(req, res)=>{
     const roomId = req.params.id;
     const room = getOrCreateRoom(roomId);
+    const roomData = getRoomData(room);
 
-    console.log(room);
+    console.log(roomData);
     res.status(200).json({
-      ...room, users: Array.from(room.users.values())
+      roomData
     })
 })
 
@@ -44,10 +45,12 @@ const io = new Server(httpServer, {
 io.on("connection", (socket) => {
   let currentRoomId = null;
   let currentUsername = null;
+  let currentClientId = null;
 
   socket.on("join-room", ({ roomId, username, clientId }) => {
     currentRoomId = roomId;
     currentUsername = username;
+    currentClientId = clientId;
     
     socket.join(roomId);
     const { room } = addUserToRoom(roomId, socket.id, username, clientId);

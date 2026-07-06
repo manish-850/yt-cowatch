@@ -63,6 +63,7 @@ export function getRoomData(room) {
       id: user.id,
       username: user.username,
       isAdmin: user.isAdmin,
+      clientId: user.clientId,
       status: user.status || { isSynced: true, currentTime: 0 }
     })),
     currentVideoId: room.currentVideoId,
