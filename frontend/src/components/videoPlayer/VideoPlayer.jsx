@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import "./VideoPlayer.css";
+import "./videoPlayer.css";
 
 
 export default function VideoPlayer({
