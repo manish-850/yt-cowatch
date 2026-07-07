@@ -2,62 +2,133 @@
 
 A real-time YouTube watch party application built with **React**, **Node.js**, **Express**, **Socket.IO**, and the **YouTube IFrame API**.
 
-> **Acknowledgement**
-> This project is based on the open-source project **yt-cowatch** by GitUtk and has been extensively refactored with a new architecture and ongoing feature improvements.
+> **Status:** Active Development
 
-## Features
+> **Acknowledgement**
+>
+> This project is based on the open-source project **yt-cowatch** by GitUtk and is being actively refactored with a redesigned architecture, improved state management, and additional real-time features.
+
+---
+
+# Features
 
 - Real-time synchronized YouTube playback
-- Multi-user watch rooms
+- Create and join watch rooms instantly
+- Admin-controlled playback
+- Live room synchronization using Socket.IO
+- Automatic room reconnection after page refresh
+- Persistent user identity using `clientId`
 - Live chat
-- Shared room synchronization
 - Responsive interface
+- Modular React architecture
+- Shared room state across all participants
 
-## Tech Stack
+---
 
-**Frontend**
+# Tech Stack
+
+## Frontend
+
 - React
 - Vite
 - Context API
+- Custom Hooks
 - Socket.IO Client
 
-**Backend**
+## Backend
+
 - Node.js
 - Express
 - Socket.IO
 
-## Folder Structure
+---
+
+# How It Works
+
+### Room Creation
+
+- A unique room ID is generated.
+- The first user automatically becomes the room admin.
+
+### Synchronization
+
+The admin controls:
+
+- Play
+- Pause
+- Seek
+- Change Video
+
+All viewers stay synchronized through Socket.IO events.
+
+### Automatic Reconnection
+
+When a participant refreshes the page:
+
+- `clientId` is restored from Local Storage.
+- Username is restored automatically.
+- The user rejoins the same room.
+- Room state is synchronized without creating a duplicate user.
+
+---
+
+# Project Structure
 
 ```text
-src/
-├── components/
-├── context/
-├── hooks/
-├── services/
-├── utils/
-└── assets/
+yt-cowatch
+│
+├── frontend
+│   ├── components
+│   ├── context
+│   ├── hooks
+│   ├── pages
+│   ├── services
+│   ├── utils
+│
+├── backend
+│   ├── routes
+│   ├── socket
+│   ├── managers
+│   ├── utils
+│   └── server.js
+│
+└── README.md
 ```
 
-## Improvements
+---
 
-- Modular component architecture
+# Improvements Over Original Project
+
+- Refactored application architecture
+- Modular component structure
 - Custom React hooks
-- Dedicated socket service
-- Better separation of concerns
-- Cleaner state management
-- Improved maintainability
+- Dedicated Socket service layer
+- Improved state management using Context API
+- Cleaner separation of concerns
+- Automatic room restoration after refresh
+- Persistent user identity with `clientId`
+- Better maintainability and scalability
 
-## Getting Started
+---
+
+# Getting Started
+
+Clone the repository
 
 ```bash
 git clone https://github.com/manish-850/yt-cowatch.git
 cd yt-cowatch
+```
+
+## Frontend
+
+```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-Start backend:
+## Backend
 
 ```bash
 cd backend
@@ -65,19 +136,52 @@ npm install
 npm start
 ```
 
-## Roadmap
+---
 
-- Authentication
-- Video queue
+# Current Progress
+
+- Room creation
+- Join room
+- Live synchronization
+- Play/Pause sync
+- Seek synchronization
+- Change video
+- Live chat
+- Automatic reconnect after refresh
+- Persistent user identity
+
+---
+
+# Roadmap
+
+- Video queue / playlist
 - Room permissions
-- Persistent chat
-- Theme support
-- Docker
-- Tests
+- Persistent chat history
+- Room expiration
+- Mobile UI improvements
 
-## Credits
 
-Original project:
-https://github.com/GitUtk/yt-cowatch
+---
 
-This repository continues development with significant architectural improvements and additional features.
+# Contributing
+
+Contributions are welcome.
+
+1. Fork the repository.
+2. Create a feature branch.
+3. Commit your changes.
+4. Open a Pull Request.
+
+---
+
+# Credits
+
+Original project : https://github.com/GitUtk/yt-cowatch
+
+This repository continues development with significant architectural improvements, a redesigned synchronization system, and additional real-time features.
+
+---
+
+# License
+
+This project is licensed under the MIT License.
