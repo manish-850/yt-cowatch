@@ -147,57 +147,6 @@ button:disabled {
   }
 }
 
-.controls-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.25rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.controls-row {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.url-input-group {
-  display: flex;
-  flex: 1;
-  gap: 0.5rem;
-}
-
-.url-input-group input {
-  flex: 1;
-}
-
-.user-list {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  padding: 0.25rem 0;
-}
-
-.user-badge {
-  background: #18181b;
-  border: 1px solid var(--border);
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.user-badge.admin {
-  border-color: var(--foreground);
-  color: var(--foreground);
-}
-
 input[type="range"] {
   -webkit-appearance: none;
   appearance: none;

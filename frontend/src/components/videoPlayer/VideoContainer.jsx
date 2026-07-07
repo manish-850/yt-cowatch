@@ -5,14 +5,25 @@ import RoomControls from "./RoomControls";
 import { useContext } from "react";
 import { RoomDataContext } from "../../context/RoomContext";
 import { PlayerDataContext } from "../../context/PlayerContext";
-import { socket , disconnectSocket } from "../../services/socket";
+import { socket, disconnectSocket } from "../../services/socket";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const VideoContainer = () => {
-  const { roomId, roomData, setRoomData, setMessages,setIsJoined } = useContext(RoomDataContext);
-  const { player, setPlayer, isMuted, setIsMuted } = useContext(PlayerDataContext);
+  const navigate = useNavigate();
+  const { roomId, roomData, setRoomData, setMessages, setIsJoined, setIsLoading } =
+    useContext(RoomDataContext);
+  const { player, setPlayer, isMuted, setIsMuted } =
+    useContext(PlayerDataContext);
+  const [isLeaved, setIsLeaved] = useState(false);
+  useEffect(() => {
+    if (isLeaved) return navigate("/");
+  }, [isLeaved]);
 
-  const currentUser = roomData?.users.find((u) => u.id === socket?.id);
+  const clientId = localStorage.getItem("clientId");
+  const currentUser = roomData?.users.find((u) => u.clientId === clientId);
   const isAdmin = currentUser?.isAdmin || false;
+  // console.log("video container : ",roomData);
 
   const toggleMute = () => {
     if (player && typeof player.mute === "function") {
@@ -27,7 +38,16 @@ const VideoContainer = () => {
   };
 
   const handleLeave = () => {
-    disconnectSocket(setRoomData, setMessages, setPlayer, setIsMuted, setIsJoined);
+    disconnectSocket();
+    setIsLeaved(true);
+    setRoomData(null);
+    setMessages([]);
+    setPlayer(null);
+    setIsMuted(true);
+    setIsJoined(false);
+    setIsLoading(false);
+    localStorage.removeItem("clientId");
+    localStorage.removeItem("username");
   };
 
   const handlePlayerReady = (playerInst) => {
@@ -53,6 +73,7 @@ const VideoContainer = () => {
 
   const handleChangeVideo = (videoId) => {
     if (socket) {
+      // console.log("VC, handlechangevideo : ",videoId)
       socket.emit("change-video", { videoId });
     }
   };
@@ -67,6 +88,7 @@ const VideoContainer = () => {
         }}
       >
         <h2>Room: {roomId}</h2>
+        {isAdmin && <RoomControls onChangeVideo={handleChangeVideo} />}
         <div style={{ display: "flex", gap: "0.5rem" }}>
           <button
             onClick={toggleMute}
@@ -78,7 +100,7 @@ const VideoContainer = () => {
           <button
             onClick={handleLeave}
             className="btn-secondary"
-            style={{ padding: "0.5rem" }}
+            style={{ padding: "0.5rem", backgroundColor: "var(--destructive)" }}
           >
             <LogOut size={18} />
           </button>
@@ -93,8 +115,6 @@ const VideoContainer = () => {
         roomData={roomData}
         onAdminPlaybackControl={handlePlaybackControl}
       />
-
-      {isAdmin && <RoomControls onChangeVideo={handleChangeVideo} />}
     </div>
   );
 };

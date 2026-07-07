@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Video } from "lucide-react";
 
 function extractVideoId(url) {
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*$/;
   const match = url.match(regExp);
   return match && match[2].length === 11 ? match[2] : url;
 }
@@ -21,11 +21,11 @@ export default function RoomControls({ onChangeVideo }) {
   };
 
   return (
-    <div className="controls-card">
+    <div className="load-video-container">
       <form onSubmit={handleVideoSubmit} className="url-input-group">
         <input
           type="text"
-          placeholder="Paste YouTube Video ID or URL"
+          placeholder="YT Video ID or URL"
           value={videoInput}
           onChange={(e) => setVideoInput(e.target.value)}
         />

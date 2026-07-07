@@ -9,23 +9,10 @@ export function getSocket() {
   return socket;
 }
 
-export const initSocket = (setRoomData, setMessages, roomId, username) => {
-  const handleRoomUpdate = (data) => {
-    setRoomData({ ...data, receivedAt: Date.now() });
-  };
-
-  const handleChat = (msg) => {
-    setMessages((prev) => [...prev, msg]);
-  };
-
+export const initSocket = () => {
   getSocket();
-  socket.emit("join-room", { roomId, username });
-  socket.on("room-update", handleRoomUpdate);
-  socket.on("chat-message", handleChat);
-
+  socket.connect()
   return () => {
-    socket.off("room-update", handleRoomUpdate);
-    socket.off("chat-message", handleChat);
     socket.disconnect();
     socket = null;
   };
@@ -39,7 +26,7 @@ export const updateVideo = (player, roomData) => {
       typeof player.getPlayerState === "function"
     ) {
       const state = player.getPlayerState();
-      socket.emit("report-status", {
+      socket?.emit("report-status", {
         videoId: roomData?.currentVideoId || "6KcV1C1Ui5s",
         isPlaying: state === 1,
         currentTime: player.getCurrentTime(),
@@ -54,12 +41,9 @@ export const handleSendMessage = (text) => {
   socket.emit("send-message", { text });
 };
 
-export const disconnectSocket = (setRoomData, setMessages, setPlayer, setIsMuted, setIsJoined) => {
-    if (socket) socket.disconnect();
+export const disconnectSocket = () => {
+  if (socket) {
+    socket.disconnect();
     socket = null;
-    setRoomData(null);
-    setMessages([]);
-    setPlayer(null);
-    setIsMuted(true);
-    setIsJoined(false);
-}
+  }
+};

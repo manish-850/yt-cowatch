@@ -4,7 +4,7 @@ import "./Chat.css";
 import { RoomDataContext } from "../../context/RoomContext";
 import { handleSendMessage } from "../../services/socket";
 
-export default function Chat({ onSendMessage }) {
+export default function Chat() {
   const [text, setText] = useState("");
   const messagesEndRef = useRef(null);
 

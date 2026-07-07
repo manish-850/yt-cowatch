@@ -1,4 +1,4 @@
-import { updateVideo, socket } from "../services/socket";
+import { updateVideo, socket } from "../../services/socket";
 import { useEffect } from "react";
 
 const useVideoUpdate = (player, roomData) => {

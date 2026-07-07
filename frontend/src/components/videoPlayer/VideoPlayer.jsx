@@ -49,6 +49,7 @@ export default function VideoPlayer({
     let player;
 
     function initPlayer() {
+      console.log("Creating player");
       player = new window.YT.Player(iframeId, {
         videoId: videoId,
         playerVars: {
@@ -62,6 +63,7 @@ export default function VideoPlayer({
         },
         events: {
           onReady: (event) => {
+            console.log("YT READY");
             playerRef.current = event.target;
             if (onPlayerReady) {
               onPlayerReady(event.target);
@@ -118,12 +120,20 @@ export default function VideoPlayer({
   }, [isAdmin]);
 
   useEffect(() => {
-    hasSyncedRef.current = false;
-    const player = playerRef.current;
-    if (player && typeof player.loadVideoById === "function") {
-      player.loadVideoById({ videoId });
-    }
-  }, [videoId]);
+  console.log("videoId changed:", videoId);
+
+  if (!roomData) return;
+
+  hasSyncedRef.current = false;
+  const player = playerRef.current;
+
+  console.log("player:", player);
+
+  if (player && typeof player.loadVideoById === "function") {
+    console.log("Loading video:", videoId);
+    player.loadVideoById({ videoId });
+  }
+}, [videoId,playerRef.current]);
 
   useEffect(() => {
     if (!socket) return;

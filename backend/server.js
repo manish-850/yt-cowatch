@@ -9,7 +9,7 @@ import {
   getRoomData,
   updateRoomVideo,
   updateRoomPlayback,
-  getOrCreateRoom
+  getOrCreateRoom,
 } from "./rooms.js";
 
 const app = express();
@@ -23,29 +23,45 @@ app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok" });
 });
 
+app.post("/api/room/:id", (req, res) => {
+  const roomId = req.params.id;
+  const { socketId, username, clientId } = req.body;
+  const { room } = addUserToRoom(roomId, socketId, username, clientId);
+  const roomData = getRoomData(room);
+
+  console.log(roomData);
+  res.status(200).json({
+    roomData,
+    receivedAt: Date.now(),
+  });
+});
+
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
     origin: "*",
-    methods: ["GET", "POST"]
-  }
+    methods: ["GET", "POST"],
+  },
 });
 
 io.on("connection", (socket) => {
   let currentRoomId = null;
   let currentUsername = null;
+  let currentClientId = null;
 
-  socket.on("join-room", ({ roomId, username }) => {
+  socket.on("join-room", ({ roomId, username, clientId }) => {
     currentRoomId = roomId;
     currentUsername = username;
-    
+    currentClientId = clientId;
+    console.log("JOIN EVENT", socket.id, roomId);
+
     socket.join(roomId);
-    const { room } = addUserToRoom(roomId, socket.id, username);
-    
+    const { room } = addUserToRoom(roomId, socket.id, username, clientId);
+
     io.to(roomId).emit("room-update", getRoomData(room));
     io.to(roomId).emit("chat-message", {
       sender: "System",
-      text: `${username} joined the room.`
+      text: `${username} joined the room.`,
     });
   });
 
@@ -53,20 +69,26 @@ io.on("connection", (socket) => {
     if (!currentRoomId || !currentUsername) return;
     io.to(currentRoomId).emit("chat-message", {
       sender: currentUsername,
-      text
+      text,
     });
   });
 
   socket.on("change-video", ({ videoId }) => {
+    console.log("Backend: ", videoId);
+    console.log("RoomId: ", currentRoomId);
     if (!currentRoomId) return;
     const room = getOrCreateRoom(currentRoomId);
-    const activeUser = room.users.get(socket.id);
+    const activeUser = room.users.get(currentClientId);
+    console.log(room.users);
+    console.log(room.users.keys());
+    console.log("socket.id:", socket.id);
+    console.log("activeUser: ", activeUser);
     if (activeUser && activeUser.isAdmin) {
       updateRoomVideo(currentRoomId, videoId);
       io.to(currentRoomId).emit("room-update", getRoomData(room));
       io.to(currentRoomId).emit("chat-message", {
         sender: "System",
-        text: `${currentUsername} changed the video.`
+        text: `${currentUsername} changed the video.`,
       });
     }
   });
@@ -74,10 +96,12 @@ io.on("connection", (socket) => {
   socket.on("playback-control", ({ isPlaying, currentTime }) => {
     if (!currentRoomId) return;
     const room = getOrCreateRoom(currentRoomId);
-    const activeUser = room.users.get(socket.id);
+    const activeUser = room.users.get(currentClientId);
     if (activeUser && activeUser.isAdmin) {
       updateRoomPlayback(currentRoomId, isPlaying, currentTime);
-      socket.to(currentRoomId).emit("playback-sync", { isPlaying, currentTime });
+      socket
+        .to(currentRoomId)
+        .emit("playback-sync", { isPlaying, currentTime });
       io.to(currentRoomId).emit("room-update", getRoomData(room));
     }
   });
@@ -85,7 +109,7 @@ io.on("connection", (socket) => {
   socket.on("report-status", ({ videoId, isPlaying, currentTime }) => {
     if (!currentRoomId) return;
     const room = getOrCreateRoom(currentRoomId);
-    const activeUser = room.users.get(socket.id);
+    const activeUser = room.users.get(currentClientId);
     if (activeUser) {
       let roomTime = room.currentTime;
       if (room.isPlaying) {
@@ -94,12 +118,17 @@ io.on("connection", (socket) => {
       const idMatch = videoId === room.currentVideoId;
       const playMatch = isPlaying === room.isPlaying;
       const timeMatch = Math.abs(currentTime - roomTime) < 3;
-      const isSynced = idMatch && (room.isPlaying ? (playMatch && timeMatch) : true);
+      const isSynced =
+        idMatch && (room.isPlaying ? playMatch && timeMatch : true);
       activeUser.status = {
         isSynced,
-        currentTime
+        currentTime,
       };
-      io.to(currentRoomId).emit("room-update", getRoomData(room));
+      // console.log("RoomId in report status : ", currentRoomId);
+      io.to(currentRoomId).emit("room-update", {
+        ...getRoomData(room),
+        receivedAt: Date.now(),
+      });
     }
   });
 
@@ -111,7 +140,7 @@ io.on("connection", (socket) => {
       io.to(currentRoomId).emit("room-update", getRoomData(room));
       io.to(currentRoomId).emit("chat-message", {
         sender: "System",
-        text: `${currentUsername} left the room.`
+        text: `${currentUsername} left the room.`,
       });
     }
   });
