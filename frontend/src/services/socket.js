@@ -9,31 +9,10 @@ export function getSocket() {
   return socket;
 }
 
-export const initSocket = (
-  setRoomData,
-  setMessages,
-  roomId,
-  username,
-  setIsLoading,
-  clientId
-) => {
-  const handleRoomUpdate = (data) => {
-    setRoomData({ ...data, receivedAt: Date.now() });
-    setIsLoading(false);
-  };
-
-  const handleChat = (msg) => {
-    setMessages((prev) => [...prev, msg]);
-  };
-
+export const initSocket = () => {
   getSocket();
-  socket.emit("join-room", { roomId, username, clientId });
-  socket.on("room-update", handleRoomUpdate);
-  socket.on("chat-message", handleChat);
-
+  socket.connect()
   return () => {
-    socket.off("room-update", handleRoomUpdate);
-    socket.off("chat-message", handleChat);
     socket.disconnect();
     socket = null;
   };

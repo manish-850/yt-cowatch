@@ -60,7 +60,7 @@ export function getRoomData(room) {
   return {
     id: room.id,
     users: Array.from(room.users.values()).map((user) => ({
-      id: user.id,
+      id: user.clientId,
       username: user.username,
       isAdmin: user.isAdmin,
       clientId: user.clientId,

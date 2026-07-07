@@ -23,7 +23,7 @@ const VideoContainer = () => {
   const clientId = localStorage.getItem("clientId");
   const currentUser = roomData?.users.find((u) => u.clientId === clientId);
   const isAdmin = currentUser?.isAdmin || false;
-  console.log("video container : ",roomData);
+  // console.log("video container : ",roomData);
 
   const toggleMute = () => {
     if (player && typeof player.mute === "function") {
@@ -47,6 +47,7 @@ const VideoContainer = () => {
     setIsJoined(false);
     setIsLoading(false);
     localStorage.removeItem("clientId");
+    localStorage.removeItem("username");
   };
 
   const handlePlayerReady = (playerInst) => {
@@ -72,7 +73,7 @@ const VideoContainer = () => {
 
   const handleChangeVideo = (videoId) => {
     if (socket) {
-      console.log("VC, handlechangevideo : ",videoId)
+      // console.log("VC, handlechangevideo : ",videoId)
       socket.emit("change-video", { videoId });
     }
   };

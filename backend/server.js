@@ -53,6 +53,7 @@ io.on("connection", (socket) => {
     currentRoomId = roomId;
     currentUsername = username;
     currentClientId = clientId;
+    console.log("JOIN EVENT", socket.id, roomId);
 
     socket.join(roomId);
     const { room } = addUserToRoom(roomId, socket.id, username, clientId);
@@ -123,7 +124,11 @@ io.on("connection", (socket) => {
         isSynced,
         currentTime,
       };
-      io.to(currentRoomId).emit("room-update", getRoomData(room));
+      // console.log("RoomId in report status : ", currentRoomId);
+      io.to(currentRoomId).emit("room-update", {
+        ...getRoomData(room),
+        receivedAt: Date.now(),
+      });
     }
   });
 

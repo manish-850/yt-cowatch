@@ -5,12 +5,13 @@ import { generateRoomId } from "../../utils/roomId";
 import { generateName } from "../../utils/username";
 
 const Form = () => {
-  const { roomId, setRoomId, setIsJoined, username, setUsername, isLoading, setIsLoading } = useContext(RoomDataContext);
+  const { roomId, setRoomId, setIsJoined, username, setUsername, setIsLoading } = useContext(RoomDataContext);
 
   const handleJoin = (e) => {
     e.preventDefault();
-    // const generatedUsername = generateName();
-    // setUsername(generatedUsername);
+    const generatedUsername = generateName();
+    if(!username.trim()) setUsername(generatedUsername);
+    localStorage.setItem("username", username);
     if (roomId.trim() && username.trim()) {
       setIsLoading(true);
       setIsJoined(true);
@@ -27,10 +28,9 @@ const Form = () => {
       <form onSubmit={handleJoin} className="card">
         <h1>Join Room</h1>
         <div className="input-group">
-          {/* <label>Username</label> */}
+          <label>Username</label>
           <input
             type="text"
-            required
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Enter your name"
