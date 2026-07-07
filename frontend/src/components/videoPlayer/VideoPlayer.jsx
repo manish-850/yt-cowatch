@@ -65,7 +65,6 @@ export default function VideoPlayer({
           onReady: (event) => {
             console.log("YT READY");
             playerRef.current = event.target;
-            // setIsPlayerReady(true);
             if (onPlayerReady) {
               onPlayerReady(event.target);
             }

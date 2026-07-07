@@ -3,7 +3,7 @@ import { RoomDataContext } from "./context/RoomContext";
 import { PlayerDataContext } from "./context/PlayerContext";
 
 import useSocket from "./hooks/socket/useSocket";
-import useVideoUpdate from "./hooks/useVideoUpdate";
+import useVideoUpdate from "./hooks/socket/useVideoUpdate";
 import AppRoutes from "./routes/AppRoutes";
 
 export default function App() {

@@ -1,6 +1,6 @@
 const rooms = new Map();
 
-export function getOrCreateRoom(roomId) {
+export function getOrCreateRoom(roomId,socketId, username, clientId) {
   if (!rooms.has(roomId)) {
     rooms.set(roomId, {
       id: roomId,

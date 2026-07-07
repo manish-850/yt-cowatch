@@ -23,14 +23,16 @@ app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok" });
 });
 
-app.get("/api/room/:id", (req, res) => {
+app.post("/api/room/:id", (req, res) => {
   const roomId = req.params.id;
-  const room = getOrCreateRoom(roomId);
+  const { socketId, username, clientId } = req.body;
+  const { room } = addUserToRoom(roomId, socketId, username, clientId);
   const roomData = getRoomData(room);
 
   console.log(roomData);
   res.status(200).json({
     roomData,
+    receivedAt: Date.now(),
   });
 });
 
@@ -93,7 +95,7 @@ io.on("connection", (socket) => {
   socket.on("playback-control", ({ isPlaying, currentTime }) => {
     if (!currentRoomId) return;
     const room = getOrCreateRoom(currentRoomId);
-    const activeUser = room.users.get(socket.id);
+    const activeUser = room.users.get(currentClientId);
     if (activeUser && activeUser.isAdmin) {
       updateRoomPlayback(currentRoomId, isPlaying, currentTime);
       socket
@@ -106,7 +108,7 @@ io.on("connection", (socket) => {
   socket.on("report-status", ({ videoId, isPlaying, currentTime }) => {
     if (!currentRoomId) return;
     const room = getOrCreateRoom(currentRoomId);
-    const activeUser = room.users.get(socket.id);
+    const activeUser = room.users.get(currentClientId);
     if (activeUser) {
       let roomTime = room.currentTime;
       if (room.isPlaying) {
