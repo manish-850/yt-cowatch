@@ -1,5 +1,5 @@
 import { Volume2, VolumeX, LogOut } from "lucide-react";
-import "./VideoPlayer.css";
+import "./videoPlayer.css";
 import VideoPlayer from "./VideoPlayer";
 import RoomControls from "./RoomControls";
 import { useContext } from "react";
