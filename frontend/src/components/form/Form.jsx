@@ -1,6 +1,6 @@
 import "./form.css";
 import { useContext } from "react";
-import { RoomDataContext } from "../../context/roomContext";
+import { RoomDataContext } from "../../context/RoomContext";
 import { generateRoomId } from "../../utils/roomId";
 import { generateName } from "../../utils/username";
 
