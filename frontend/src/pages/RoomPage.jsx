@@ -31,14 +31,14 @@ const RoomPage = () => {
   return id;
 }, []);
 
-useMemo(()=>{
+useEffect(() => {
   let uName = localStorage.getItem("username");
-  if(!uName) {
+  if (!uName) {
     uName = generateName();
-    setUsername(uName);
     localStorage.setItem("username", uName);
   }
-},[]);
+  setUsername(uName);
+}, [setUsername]);
 
   useEffect(() => {
     const handleRoomUpdate = (data) => {

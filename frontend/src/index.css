@@ -18,7 +18,7 @@
   --border: #27272a;
   --input: #27272a;
   --ring: #d4d4d8;
-  --radius: 6px;
+  --radius: 40px;
   --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
@@ -44,6 +44,11 @@ body {
   flex: 1;
 }
 
+a {
+  color: var(--foreground);
+  text-decoration: none;
+}
+
 h1 {
   font-size: 1.5rem;
   font-weight: 600;
@@ -61,74 +66,6 @@ h3 {
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: -0.025em;
-}
-
-.input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--muted-foreground);
-}
-
-input {
-  font-family: inherit;
-  font-size: 0.875rem;
-  padding: 0.5rem 0.75rem;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--foreground);
-  outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-input:focus {
-  border-color: var(--ring);
-  box-shadow: 0 0 0 2px rgba(212, 212, 216, 0.2);
-}
-
-button {
-  font-family: inherit;
-  font-size: 0.875rem;
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius);
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s, opacity 0.2s;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-button[type="submit"], button:not(.btn-secondary) {
-  background: var(--primary);
-  color: var(--primary-foreground);
-  border: none;
-}
-
-button[type="submit"]:hover, button:not(.btn-secondary):hover {
-  opacity: 0.9;
-}
-
-.btn-secondary {
-  background: transparent;
-  color: var(--foreground);
-  border: 1px solid var(--border);
-}
-
-.btn-secondary:hover {
-  background: var(--accent);
-}
-
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 
 .app-container {
@@ -165,7 +102,7 @@ input[type="range"]::-webkit-slider-thumb {
   height: 14px;
   border-radius: 50%;
   border: 1px solid var(--border);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   transition: transform 0.1s;
 }
 
