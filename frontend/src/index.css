@@ -44,6 +44,11 @@ body {
   flex: 1;
 }
 
+a {
+  color: var(--foreground);
+  text-decoration: none;
+}
+
 h1 {
   font-size: 1.5rem;
   font-weight: 600;
@@ -97,7 +102,7 @@ input[type="range"]::-webkit-slider-thumb {
   height: 14px;
   border-radius: 50%;
   border: 1px solid var(--border);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   transition: transform 0.1s;
 }
 
