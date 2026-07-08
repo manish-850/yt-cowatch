@@ -23,7 +23,6 @@ const VideoContainer = () => {
   const clientId = localStorage.getItem("clientId");
   const currentUser = roomData?.users.find((u) => u.clientId === clientId);
   const isAdmin = currentUser?.isAdmin || false;
-  // console.log("video container : ",roomData);
 
   const toggleMute = () => {
     if (player && typeof player.mute === "function") {
@@ -73,7 +72,6 @@ const VideoContainer = () => {
 
   const handleChangeVideo = (videoId) => {
     if (socket) {
-      // console.log("VC, handlechangevideo : ",videoId)
       socket.emit("change-video", { videoId });
     }
   };
@@ -87,7 +85,7 @@ const VideoContainer = () => {
           alignItems: "center",
         }}
       >
-        <h2>Room: {roomId}</h2>
+        <h2>Room : {roomId}</h2>
         {isAdmin && <RoomControls onChangeVideo={handleChangeVideo} />}
         <div style={{ display: "flex", gap: "0.5rem" }}>
           <button
@@ -111,7 +109,7 @@ const VideoContainer = () => {
         videoId={roomData?.currentVideoId || "6KcV1C1Ui5s"}
         socket={socket}
         onPlayerReady={handlePlayerReady}
-        isAdmin={isAdmin}
+        isAdmin={true}
         roomData={roomData}
         onAdminPlaybackControl={handlePlaybackControl}
       />

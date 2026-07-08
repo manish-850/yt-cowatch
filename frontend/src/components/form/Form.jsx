@@ -2,17 +2,21 @@ import "./form.css";
 import { useContext } from "react";
 import { RoomDataContext } from "../../context/RoomContext";
 import { generateRoomId } from "../../utils/roomId";
-import { generateName } from "../../utils/username";
 
 const Form = () => {
-  const { roomId, setRoomId, setIsJoined, username, setUsername, setIsLoading } = useContext(RoomDataContext);
+  const {
+    roomId,
+    setRoomId,
+    setIsJoined,
+    username,
+    setUsername,
+    setIsLoading,
+  } = useContext(RoomDataContext);
 
   const handleJoin = (e) => {
     e.preventDefault();
-    const generatedUsername = generateName();
-    if(!username.trim()) setUsername(generatedUsername);
-    localStorage.setItem("username", username);
-    if (roomId.trim() && username.trim()) {
+    if (username.trim()) localStorage.setItem("username", username);
+    if (roomId.trim()) {
       setIsLoading(true);
       setIsJoined(true);
     }
@@ -33,20 +37,19 @@ const Form = () => {
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="Enter your name"
+            placeholder="Enter name (optional)"
           />
         </div>
         <div className="input-group">
-          {/* <label>Room ID</label> */}
+          <label>Room ID</label>
           <div style={{ display: "flex", gap: "0.5rem" }}>
             <input
-              // disabled={true}
               type="text"
               required
               value={roomId}
               onChange={(e) => setRoomId(e.target.value)}
               placeholder="Room ID"
-              style={{ flex: 1 , border:"none"}}
+              style={{ flex: 1 }}
             />
             <button
               type="button"

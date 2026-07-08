@@ -14,7 +14,6 @@ export default function Chat() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!text.trim()) return;
@@ -22,11 +21,15 @@ export default function Chat() {
     setText("");
   };
 
-
   return (
     <div className="chat-container">
-      <div style={{ padding: "1rem 1.5rem", borderBottom: "1px solid var(--border)" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "var(--muted-foreground)", fontSize: "0.875rem", marginBottom: "0.5rem" }}>
+      <div
+        style={{
+          padding: "1rem 1.5rem",
+          borderBottom: "1px solid var(--border)",
+        }}
+      >
+        <div className="active-user-container">
           <Users size={16} />
           <span>Active Viewers ({roomData?.users.length || 0})</span>
         </div>
@@ -34,14 +37,14 @@ export default function Chat() {
           {roomData?.users.map((user) => {
             const isSynced = user.status?.isSynced ?? true;
             return (
-              <div key={user.id} className={`user-badge ${user.isAdmin ? "admin" : ""}`}>
+              <div
+                key={user.id}
+                className={`user-badge ${user.isAdmin ? "admin" : ""}`}
+              >
                 <span
+                  className="user"
                   style={{
-                    width: "6px",
-                    height: "6px",
-                    borderRadius: "50%",
                     backgroundColor: isSynced ? "#22c55e" : "#ef4444",
-                    display: "inline-block"
                   }}
                 />
                 {user.isAdmin && <Shield size={12} />}
@@ -55,15 +58,28 @@ export default function Chat() {
         <h3>Room Chat</h3>
       </div>
       <div className="chat-messages">
-        {messages && messages.map((msg, index) => {
-          const isSystem = msg.sender === "System";
-          return (
-            <div key={index} className={`message ${isSystem ? "system" : ""}`}>
-              {!isSystem && <span className="message-sender">{msg.sender}</span>}
-              <span className="message-text">{msg.text}</span>
-            </div>
-          );
-        })}
+        {messages &&
+          messages.map((msg, index) => {
+            const isSystem = msg.sender === "System";
+            const isSender = msg.sender === localStorage.getItem("username");
+            return (
+              <div
+                key={index}
+                className={`message ${isSystem ? "system" : ""}`}
+              >
+                {!isSystem && (
+                  <span className="message-sender">{msg.sender}</span>
+                )}
+                <div className={`msg-text-wrapper ${isSender && isSystem ? "sender" : "receiver"}`}>
+                  <span
+                    className={`message-text`}
+                  >
+                    {msg.text}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
         <div ref={messagesEndRef} />
       </div>
       <form onSubmit={handleSubmit} className="chat-input-form">

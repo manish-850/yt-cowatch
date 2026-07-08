@@ -5,12 +5,12 @@ import { useNavigate } from "react-router-dom";
 import Loading from "../components/Loading/Loading";
 
 const JoinPage = () => {
-  const { isJoined, roomId, isLoading, isConnected } = useContext(RoomDataContext);
+  const { isJoined, roomId, isLoading} = useContext(RoomDataContext);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isJoined && isLoading && !isConnected) navigate(`/room/${roomId}`);
-  }, [isJoined, isLoading, isConnected, roomId]);
+    if (isJoined && isLoading) navigate(`/room/${roomId}`);
+  }, [isJoined, isLoading, roomId]);
 
   if (isLoading) return <Loading />;
   if (!isLoading && !isJoined) return <Form />;

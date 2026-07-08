@@ -3,13 +3,16 @@
   flex-direction: column;
   padding: 1.5rem;
   gap: 1.5rem;
+  position: sticky;
+  top: 0;
+  /* background-color: yellow; */
 }
 
 .player-container {
   position: relative;
   width: 100%;
   padding-top: 56.25%;
-  background: #000;
+  background: #ff0000;
   border-radius: var(--radius);
   overflow: hidden;
   border: 1px solid var(--border);
@@ -44,29 +47,5 @@
 }
 
 .url-input-group input {
-  flex: 1;
-}
-
-.user-list {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  padding: 0.25rem 0;
-}
-
-.user-badge {
-  background: #18181b;
-  border: 1px solid var(--border);
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.user-badge.admin {
-  border-color: var(--foreground);
-  color: var(--foreground);
+  width: 26rem;
 }
