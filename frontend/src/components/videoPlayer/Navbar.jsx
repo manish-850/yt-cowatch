@@ -3,9 +3,10 @@ import RoomControls from "./RoomControls";
 import { useContext } from "react";
 import { RoomDataContext } from "../../context/RoomContext";
 import { PlayerDataContext } from "../../context/PlayerContext";
-import { socket, disconnectSocket } from "../../services/socket";
+import { disconnectSocket } from "../../services/socket";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -50,41 +51,26 @@ const Navbar = () => {
     localStorage.removeItem("username");
   };
 
-  const handleChangeVideo = (videoId) => {
-    if (socket) {
-      socket.emit("change-video", { videoId });
-    }
-  };
 
   useEffect(() => {
     if (isLeaved) return navigate("/");
   }, [isLeaved]);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-      }}
-    >
+    <div className="flex items-center justify-between">
       <h3>Room : {roomId}</h3>
-      {isAdmin && <RoomControls onChangeVideo={handleChangeVideo} />}
-      <div style={{ display: "flex", gap: "0.5rem" }}>
-        <button
-          onClick={toggleMute}
-          className="btn-secondary"
-          style={{ padding: "0.5rem" }}
-        >
+      {isAdmin && <RoomControls />}
+      <div className="flex gap-3">
+        <Button variant="secondaryFlex" size="icon" onClick={toggleMute}>
           {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={handleLeave}
-          className="btn-secondary"
-          style={{ padding: "0.5rem", backgroundColor: "var(--destructive)" }}
+          variant="destructiveFlex"
+          size="icon"
         >
           <LogOut size={18} />
-        </button>
+        </Button>
       </div>
     </div>
   );

@@ -32,23 +32,15 @@
 .input-group {
   display: flex;
   align-items: flex-end;
-  /* flex-direction: column; */
   gap: 0.5rem;
-  /* background-color: red; */
 }
 
-label {
-  font-size: 0.875rem;
-  font-weight: 400;
-  letter-spacing: -0.02rem;
-  color: var(--foreground);
-}
+
 
 input {
   font-family: inherit;
   font-size: 0.875rem;
   padding: 0.5rem 0.75rem;
-  border-radius: var(--radius);
   border: 1px solid var(--border);
   background-color: var(--secondary);
   color: var(--foreground);
@@ -86,35 +78,6 @@ input[type="range"]::-webkit-slider-thumb {
 input[type="range"]::-webkit-slider-thumb:hover {
   transform: scale(1.1);
 }
-
-/* button {
-  font-family: inherit;
-  font-size: 0.875rem;
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius);
-  cursor: pointer;
-  transition: background-color 0.2s, opacity 0.2s;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-} */
-
-button:active {
-  scale: 0.90;
-}
-
-/* button[type="submit"],
-button:not(.btn-secondary) {
-  background: var(--primary);
-  color: var(--primary-foreground);
-  border: none;
-} */
-
-/* button[type="submit"]:hover,
-button:not(.btn-secondary):hover {
-  opacity: 0.9;
-} */
 
 .btn-secondary {
   background: transparent;

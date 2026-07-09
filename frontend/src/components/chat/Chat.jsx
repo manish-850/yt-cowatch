@@ -3,6 +3,9 @@ import { Send, UsersRound, Shield } from "lucide-react";
 import "./chat.css";
 import { RoomDataContext } from "../../context/RoomContext";
 import { handleSendMessage } from "../../services/socket";
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 export default function Chat() {
   const [text, setText] = useState("");
@@ -37,9 +40,9 @@ export default function Chat() {
           {roomData?.users.map((user) => {
             const isSynced = user.status?.isSynced ?? true;
             return (
-              <div
+              <Badge
+                variant="secondary"
                 key={user.id}
-                className={`user-badge ${user.isAdmin ? "admin" : ""}`}
               >
                 <span
                   className="user"
@@ -49,13 +52,13 @@ export default function Chat() {
                 />
                 {user.isAdmin && <Shield size={12} />}
                 {user.username}
-              </div>
+              </Badge>
             );
           })}
         </div>
       </div>
       <div className="chat-header">
-        <h3>Room Chat</h3>
+        <h3>Chat</h3>
       </div>
       <div className="chat-messages">
         {messages &&
@@ -83,15 +86,15 @@ export default function Chat() {
         <div ref={messagesEndRef} />
       </div>
       <form onSubmit={handleSubmit} className="chat-input-form">
-        <input
+        <Input
           type="text"
           placeholder="Type a message..."
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
-        <button type="submit">
+        <Button type="submit" variant="defaultFlex" size="icon">
           <Send size={18} />
-        </button>
+        </Button>
       </form>
     </div>
   );
