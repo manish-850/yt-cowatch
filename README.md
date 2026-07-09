@@ -6,6 +6,8 @@ Built with **React**, **Express**, **Socket.IO**, and the **YouTube IFrame API**
 
 > **Status:** Active Development
 
+> **Status:** Active Development
+
 > **Acknowledgement**
 >
 > This project is fork of **yt-cowatch** by GitUtk. It has been extensively refactored with a redesigned architecture, reusable UI components, improved synchronization logic, and ongoing feature development.
@@ -85,7 +87,7 @@ After refreshing the page:
 # Project Structure
 
 ```text
-yt-cowatch
+ytsync
 │
 ├── frontend
 │   ├── src

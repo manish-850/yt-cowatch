@@ -1,0 +1,79 @@
+import { Volume2, VolumeX, LogOut } from "lucide-react";
+import RoomControls from "./RoomControls";
+import { useContext } from "react";
+import { RoomDataContext } from "../../context/RoomContext";
+import { PlayerDataContext } from "../../context/PlayerContext";
+import { disconnectSocket } from "../../services/socket";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+
+const Navbar = () => {
+  const navigate = useNavigate();
+  const { player, isMuted, setIsMuted, setPlayer } =
+    useContext(PlayerDataContext);
+  const {
+    roomId,
+    roomData,
+    setRoomData,
+    setMessages,
+    setIsJoined,
+    setIsLoading,
+    setUsername
+  } = useContext(RoomDataContext);
+  const clientId = localStorage.getItem("clientId");
+  const currentUser = roomData?.users.find((u) => u.clientId === clientId);
+  const isAdmin = currentUser?.isAdmin || false;
+  const [isLeaved, setIsLeaved] = useState(false);
+  const toggleMute = () => {
+    if (player && typeof player.mute === "function") {
+      if (isMuted) {
+        player.unMute();
+        setIsMuted(false);
+      } else {
+        player.mute();
+        setIsMuted(true);
+      }
+    }
+  };
+
+  const handleLeave = () => {
+    disconnectSocket();
+    setIsLeaved(true);
+    setRoomData(null);
+    setMessages([]);
+    setPlayer(null);
+    setIsMuted(true);
+    setIsJoined(false);
+    setIsLoading(false);
+    setUsername("");
+    localStorage.removeItem("clientId");
+    localStorage.removeItem("username");
+  };
+
+
+  useEffect(() => {
+    if (isLeaved) return navigate("/");
+  }, [isLeaved]);
+
+  return (
+    <div className="flex items-center justify-between">
+      <h3>Room : {roomId}</h3>
+      {isAdmin && <RoomControls />}
+      <div className="flex gap-3">
+        <Button variant="secondaryFlex" size="icon" onClick={toggleMute}>
+          {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+        </Button>
+        <Button
+          onClick={handleLeave}
+          variant="destructiveFlex"
+          size="icon"
+        >
+          <LogOut size={18} />
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+export default Navbar;
