@@ -31,8 +31,10 @@
 
 .input-group {
   display: flex;
-  flex-direction: column;
+  align-items: flex-end;
+  /* flex-direction: column; */
   gap: 0.5rem;
+  /* background-color: red; */
 }
 
 label {
@@ -85,7 +87,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
   transform: scale(1.1);
 }
 
-button {
+/* button {
   font-family: inherit;
   font-size: 0.875rem;
   padding: 0.5rem 1rem;
@@ -96,23 +98,23 @@ button {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-}
+} */
 
 button:active {
   scale: 0.90;
 }
 
-button[type="submit"],
+/* button[type="submit"],
 button:not(.btn-secondary) {
   background: var(--primary);
   color: var(--primary-foreground);
   border: none;
-}
+} */
 
-button[type="submit"]:hover,
+/* button[type="submit"]:hover,
 button:not(.btn-secondary):hover {
   opacity: 0.9;
-}
+} */
 
 .btn-secondary {
   background: transparent;
