@@ -3,6 +3,8 @@ import { useContext, useEffect, useState } from "react";
 import { RoomDataContext } from "../../context/RoomContext";
 import { generateRoomId } from "../../utils/roomId";
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { InputField } from "./InputField";
 
 const Form = () => {
   const {
@@ -43,36 +45,33 @@ const Form = () => {
       <div className="form-wrapper">
         <form onSubmit={handleJoin} className="card">
           <h1>Join Room</h1>
+          <InputField
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Enter name (optional)"
+            label="Username"
+          />
           <div className="input-group">
-            <label>Username</label>
-            <input
+            <InputField
               type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Enter name (optional)"
+              value={roomId}
+              onChange={(e) => setRoomId(e.target.value)}
+              placeholder="Room Id"
+              label="Room Id"
             />
+            <Button 
+              type="button"
+              onClick={handleCreateRoom}
+              variant="secondary"
+              size="lg"
+            >
+              Generate
+            </Button>
           </div>
-          <div className="input-group">
-            <label>Room Id</label>
-            <div style={{ display: "flex", gap: "0.5rem" }}>
-              <input
-                type="text"
-                required
-                value={roomId}
-                onChange={(e) => setRoomId(e.target.value)}
-                placeholder="Room ID"
-                style={{ flex: 1 }}
-              />
-              <button
-                type="button"
-                onClick={handleCreateRoom}
-                className="btn-secondary"
-              >
-                Generate
-              </button>
-            </div>
-          </div>
-          <button type="submit">Join Room</button>
+          <Button type="submit" variant="default">
+            Join Room
+          </Button>
         </form>
         <div className="project-info">
           <div className="star">
@@ -86,7 +85,11 @@ const Form = () => {
             <small>{stars}</small>
           </div>
           <div className="github">
-            <Link to="https://github.com/manish-850/yt-cowatch">
+            <Link
+              target="_blank"
+              rel="noopener noreferrer"
+              to="https://github.com/manish-850/yt-cowatch"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
