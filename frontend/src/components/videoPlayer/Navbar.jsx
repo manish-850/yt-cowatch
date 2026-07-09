@@ -18,6 +18,7 @@ const Navbar = () => {
     setMessages,
     setIsJoined,
     setIsLoading,
+    setUsername
   } = useContext(RoomDataContext);
   const clientId = localStorage.getItem("clientId");
   const currentUser = roomData?.users.find((u) => u.clientId === clientId);
@@ -44,6 +45,7 @@ const Navbar = () => {
     setIsMuted(true);
     setIsJoined(false);
     setIsLoading(false);
+    setUsername("");
     localStorage.removeItem("clientId");
     localStorage.removeItem("username");
   };

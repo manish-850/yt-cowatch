@@ -59,6 +59,32 @@ input:focus {
   box-shadow: 0 0 0 2px rgba(212, 212, 216, 0.2);
 }
 
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--secondary);
+  height: 6px;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--primary);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.1s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+}
+
 button {
   font-family: inherit;
   font-size: 0.875rem;
@@ -70,6 +96,10 @@ button {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+}
+
+button:active {
+  scale: 0.90;
 }
 
 button[type="submit"],

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useContext } from "react";
-import { Send, Users, Shield } from "lucide-react";
+import { Send, UsersRound, Shield } from "lucide-react";
 import "./chat.css";
 import { RoomDataContext } from "../../context/RoomContext";
 import { handleSendMessage } from "../../services/socket";
@@ -30,7 +30,7 @@ export default function Chat() {
         }}
       >
         <div className="active-user-container">
-          <Users size={16} />
+          <UsersRound size={16}/>
           <span>Active Viewers ({roomData?.users.length || 0})</span>
         </div>
         <div className="user-list">

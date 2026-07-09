@@ -60,7 +60,7 @@ const Form = () => {
                 required
                 value={roomId}
                 onChange={(e) => setRoomId(e.target.value)}
-                placeholder="Room ID"
+                placeholder="Room Id"
                 style={{ flex: 1 }}
               />
               <button
@@ -86,7 +86,7 @@ const Form = () => {
             <small>{stars}</small>
           </div>
           <div className="github">
-            <Link to="https://github.com/manish-850/yt-cowatch">
+            <Link target="_blank" rel="noopener noreferrer" to="https://github.com/manish-850/yt-cowatch">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
