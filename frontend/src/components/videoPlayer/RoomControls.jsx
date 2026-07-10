@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { Video } from "lucide-react";
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button";
+import { socket } from "../../services/socket";
 
 function extractVideoId(url) {
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*$/;
@@ -7,15 +10,22 @@ function extractVideoId(url) {
   return match && match[2].length === 11 ? match[2] : url;
 }
 
-export default function RoomControls({ onChangeVideo }) {
+export default function RoomControls() {
   const [videoInput, setVideoInput] = useState("");
+
+const handleChangeVideo = (videoId) => {
+    if (socket) {
+      socket.emit("change-video", { videoId });
+    }
+  };
+
 
   const handleVideoSubmit = (e) => {
     e.preventDefault();
     if (!videoInput.trim()) return;
     const id = extractVideoId(videoInput);
     if (id) {
-      onChangeVideo(id);
+      handleChangeVideo(id);
       setVideoInput("");
     }
   };
@@ -23,15 +33,15 @@ export default function RoomControls({ onChangeVideo }) {
   return (
     <div className="load-video-container">
       <form onSubmit={handleVideoSubmit} className="url-input-group">
-        <input
+        <Input
           type="text"
-          placeholder="YT Video ID or URL"
+          placeholder="Paste url or id"
           value={videoInput}
           onChange={(e) => setVideoInput(e.target.value)}
         />
-        <button type="submit" className="btn-secondary">
+        <Button type="submit" variant="defaultFlex" size="icon">
           <Video size={18} />
-        </button>
+        </Button>
       </form>
     </div>
   );

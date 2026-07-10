@@ -1,8 +1,11 @@
 import { useState, useEffect, useRef, useContext } from "react";
-import { Send, Users, Shield } from "lucide-react";
-import "./Chat.css";
+import { Send, UsersRound, Shield } from "lucide-react";
+import "./chat.css";
 import { RoomDataContext } from "../../context/RoomContext";
 import { handleSendMessage } from "../../services/socket";
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 export default function Chat() {
   const [text, setText] = useState("");
@@ -14,7 +17,6 @@ export default function Chat() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!text.trim()) return;
@@ -22,60 +24,77 @@ export default function Chat() {
     setText("");
   };
 
-
   return (
     <div className="chat-container">
-      <div style={{ padding: "1rem 1.5rem", borderBottom: "1px solid var(--border)" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "var(--muted-foreground)", fontSize: "0.875rem", marginBottom: "0.5rem" }}>
-          <Users size={16} />
+      <div
+        style={{
+          padding: "1rem 1.5rem",
+          borderBottom: "1px solid var(--border)",
+        }}
+      >
+        <div className="active-user-container">
+          <UsersRound size={16}/>
           <span>Active Viewers ({roomData?.users.length || 0})</span>
         </div>
         <div className="user-list">
           {roomData?.users.map((user) => {
             const isSynced = user.status?.isSynced ?? true;
             return (
-              <div key={user.id} className={`user-badge ${user.isAdmin ? "admin" : ""}`}>
+              <Badge
+                variant="secondary"
+                key={user.id}
+              >
                 <span
+                  className="user"
                   style={{
-                    width: "6px",
-                    height: "6px",
-                    borderRadius: "50%",
                     backgroundColor: isSynced ? "#22c55e" : "#ef4444",
-                    display: "inline-block"
                   }}
                 />
                 {user.isAdmin && <Shield size={12} />}
                 {user.username}
-              </div>
+              </Badge>
             );
           })}
         </div>
       </div>
       <div className="chat-header">
-        <h3>Room Chat</h3>
+        <h3>Chat</h3>
       </div>
       <div className="chat-messages">
-        {messages && messages.map((msg, index) => {
-          const isSystem = msg.sender === "System";
-          return (
-            <div key={index} className={`message ${isSystem ? "system" : ""}`}>
-              {!isSystem && <span className="message-sender">{msg.sender}</span>}
-              <span className="message-text">{msg.text}</span>
-            </div>
-          );
-        })}
+        {messages &&
+          messages.map((msg, index) => {
+            const isSystem = msg.sender === "System";
+            const isSender = msg.sender === localStorage.getItem("username");
+            return (
+              <div
+                key={index}
+                className={`message ${isSystem ? "system" : ""}`}
+              >
+                {!isSystem && (
+                  <span className="message-sender">{msg.sender}</span>
+                )}
+                <div className={`msg-text-wrapper ${isSender && isSystem ? "sender" : "receiver"}`}>
+                  <span
+                    className={`message-text`}
+                  >
+                    {msg.text}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
         <div ref={messagesEndRef} />
       </div>
       <form onSubmit={handleSubmit} className="chat-input-form">
-        <input
+        <Input
           type="text"
           placeholder="Type a message..."
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
-        <button type="submit">
+        <Button type="submit" variant="defaultFlex" size="icon">
           <Send size={18} />
-        </button>
+        </Button>
       </form>
     </div>
   );
