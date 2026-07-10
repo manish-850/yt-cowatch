@@ -61,12 +61,12 @@ const Navbar = () => {
       <h3>Room : {roomId}</h3>
       {isAdmin && <RoomControls />}
       <div className="flex gap-3">
-        <Button variant="secondaryFlex" size="icon" onClick={toggleMute}>
+        <Button variant="secondary" size="icon" onClick={toggleMute}>
           {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
         </Button>
         <Button
           onClick={handleLeave}
-          variant="destructiveFlex"
+          variant="destructive"
           size="icon"
         >
           <LogOut size={18} />

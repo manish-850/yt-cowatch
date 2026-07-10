@@ -50,7 +50,7 @@ export default function Chat() {
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
-        <Button type="submit" variant="defaultFlex" size="icon">
+        <Button type="submit" variant="default" size="icon">
           <Send size={18} />
         </Button>
       </form>
