@@ -38,12 +38,9 @@
 
 
 input {
-  font-family: inherit;
   font-size: 0.875rem;
   padding: 0.5rem 0.75rem;
   border: 1px solid var(--border);
-  background-color: var(--secondary);
-  color: var(--foreground);
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
