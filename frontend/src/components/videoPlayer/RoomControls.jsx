@@ -39,7 +39,7 @@ const handleChangeVideo = (videoId) => {
           value={videoInput}
           onChange={(e) => setVideoInput(e.target.value)}
         />
-        <Button type="submit" variant="defaultFlex" size="icon">
+        <Button type="submit" variant="default" size="icon">
           <Video size={18} />
         </Button>
       </form>
