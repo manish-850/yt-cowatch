@@ -1,5 +1,5 @@
 import VideoContainer from "../components/videoPlayer/VideoContainer";
-import Chat from "../components/chat/Chat";
+import Sidebar from "../components/videoPlayer/Sidebar";
 import { useEffect, useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { RoomDataContext } from "../context/RoomContext";
@@ -76,7 +76,7 @@ useEffect(() => {
   return (
     <div className="app-container">
       <VideoContainer />
-      <Chat />
+      <Sidebar/>
     </div>
   );
 };
