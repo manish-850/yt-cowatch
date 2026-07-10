@@ -66,20 +66,13 @@ export default function Chat() {
             const isSystem = msg.sender === "System";
             const isSender = msg.sender === localStorage.getItem("username");
             return (
-              <div
-                key={index}
-                className={`message ${isSystem ? "system" : ""}`}
-              >
-                {!isSystem && (
+              <div key={index} className={`message ${isSystem ? "system" : isSender ? "sender" : "receiver"}`}> 
+                {(!isSystem&&!isSender) && (
                   <span className="message-sender">{msg.sender}</span>
                 )}
-                <div className={`msg-text-wrapper ${isSender && isSystem ? "sender" : "receiver"}`}>
-                  <span
-                    className={`message-text`}
-                  >
+                  <span className={`message-text`}>
                     {msg.text}
                   </span>
-                </div>
               </div>
             );
           })}
