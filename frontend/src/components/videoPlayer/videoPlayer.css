@@ -4,6 +4,8 @@
   gap: 1.5rem;
   position: sticky;
   top: 0;
+  padding: 0 1rem;
+  padding-top: 1.5rem;
 }
 
 .player-container {
@@ -45,4 +47,17 @@
 
 .url-input-group input {
   width: 26rem;
+}
+
+.sidebar{
+  background-color: var(--sidebar);
+  padding: 0 1rem;
+  padding-top: 1.5rem;
+  .sidebar-tabslist{
+    padding: 0.125rem;
+    border-radius: var(--radius);
+  }
+  .sidebar-tabstrigger{
+    border-radius: var(--radius);
+  }
 }

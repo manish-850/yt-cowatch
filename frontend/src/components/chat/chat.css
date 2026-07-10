@@ -1,5 +1,4 @@
 .chat-container {
-  /* border-left: 1px solid var(--border); */
   display: flex;
   flex-direction: column;
   min-height: 100%;
@@ -88,13 +87,13 @@
 
 .user-list {
   display: flex;
-  flex-direction: column;
   gap: 0.5rem;
+  flex-wrap: wrap;
   padding: 0.25rem 0;
-  min-height: 100%;
 }
 
 .user-badge.admin {
+  border-color: var(--foreground);
   color: var(--foreground);
 
   .user {
