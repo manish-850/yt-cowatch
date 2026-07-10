@@ -154,7 +154,13 @@ body {
 a {
   color: var(--foreground);
   text-decoration: none;
+  cursor: pointer;
 }
+
+button{
+  cursor: pointer;
+}
+
 
 h1 {
   font-size: 1.5rem;
