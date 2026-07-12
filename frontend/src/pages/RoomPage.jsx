@@ -1,14 +1,14 @@
 import VideoContainer from "../components/videoPlayer/VideoContainer";
 import Sidebar from "../components/videoPlayer/Sidebar";
-import { useEffect, useContext, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { RoomDataContext } from "../context/RoomContext";
-import { PlayerDataContext } from "../context/PlayerContext";
 import { getSocket } from "../services/socket";
 import useVideoUpdate from "../hooks/socket/useVideoUpdate";
 import { generateName } from "../utils/username";
 import Loading from "../components/Loading/Loading";
 import { useMemo } from "react";
+import usePlayer from "@/hooks/player/usePlayer";
+import useRoom from "@/hooks/room/useRoom";
 
 const RoomPage = () => {
   const { roomId } = useParams();
@@ -18,9 +18,9 @@ const RoomPage = () => {
     setRoomId,
     setMessages,
     roomData,
-  } = useContext(RoomDataContext);
+  } = useRoom();
   const [isLoading, setIsLoading] = useState(true);
-  const { player } = useContext(PlayerDataContext);
+  const { player } = usePlayer();
 
   const clientId = useMemo(() => {
   let id = localStorage.getItem("clientId");
