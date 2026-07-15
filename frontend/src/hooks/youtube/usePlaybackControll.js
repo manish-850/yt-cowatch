@@ -6,6 +6,7 @@ const usePlaybackControll = () => {
 
   const handlePlaybackControl = (isPlaying, currentTime) => {
     if (socket) {
+      console.log("handlePlaybackControl : ", isPlaying, currentTime);
       socket.emit("playback-control", { isPlaying, currentTime });
     }
   };
@@ -13,34 +14,8 @@ const usePlaybackControll = () => {
   useEffect(() => {
     handlePlaybackControlRef.current = handlePlaybackControl;
   }, [handlePlaybackControl]);
+
+  return { handlePlaybackControlRef }
 };
 
 export default usePlaybackControll;
-
-
-
-
-
-
-// onStateChange: (event) => {
-//           if (isAdmin) {
-//             if (handlePlaybackControlRef.current) {
-//               if (event.data === 1) {
-//                 handlePlaybackControlRef.current(
-//                   true,
-//                   event.target.getCurrentTime(),
-//                 );
-//               } else if (event.data === 2) {
-//                 handlePlaybackControlRef.current(
-//                   false,
-//                   event.target.getCurrentTime(),
-//                 );
-//               }
-//             }
-//           }
-//           // else {
-//           //   if (event.data === 1) {
-//           //     syncToTargetTime(true);
-//           //   }
-//           // }
-//         },

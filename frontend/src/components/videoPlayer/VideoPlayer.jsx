@@ -1,8 +1,7 @@
-
 import "./videoPlayer.css";
 
 import useInitialSync from "@/hooks/youtube/useInitialSync";
-import usePlaybackSocket from "@/hooks/youtube/useYoutubePlayer";
+import usePlaybackSocket from "@/hooks/youtube/usePlaybackSocket";
 import usePlaybackControll from "@/hooks/youtube/usePlaybackControll";
 import useVideoLoader from "@/hooks/youtube/useVideoLoader";
 import useYoutubePlayer from "@/hooks/youtube/useYoutubePlayer";
@@ -15,20 +14,15 @@ export default function VideoPlayer() {
   const currentUser = roomData?.users.find((u) => u.clientId === clientId);
   let isAdmin = currentUser?.isAdmin || false;
   isAdmin = true;
-  
-  // new
-  
-  // let isFromPlayingState = false;
-  
-  
-  const playerRef = useYoutubePlayer();
 
+  const { roomDataRef } = useInitialSync();
+  const { handlePlaybackControlRef } = usePlaybackControll();
+
+  const { playerRef } = useYoutubePlayer(roomDataRef,handlePlaybackControlRef);
 
   usePlaybackSocket(playerRef);
-  useInitialSync(playerRef);
-  usePlaybackControll();
   useVideoLoader(playerRef);
-  
+
   return (
     <div
       className="player-container"

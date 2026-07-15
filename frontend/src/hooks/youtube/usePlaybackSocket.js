@@ -6,6 +6,7 @@ const usePlaybackSocket = (playerRef) => {
     if (!socket) return;
 
     const handleSync = ({ isPlaying, currentTime }) => {
+      console.log("handle sync fired")
       const player = playerRef.current;
       if (!player || typeof player.getPlayerState !== "function") return;
 

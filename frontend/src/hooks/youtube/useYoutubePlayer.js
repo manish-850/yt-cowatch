@@ -1,23 +1,19 @@
 import useRoom from "../room/useRoom";
 import usePlayer from "../player/usePlayer";
 import { useEffect, useRef } from "react";
+import { syncToTargetTime } from "@/utils/syncToTargetTime";
 
-const useYoutubePlayer = () => {
+const useYoutubePlayer = (roomDataRef,handlePlaybackControlRef) => {
   const playerRef = useRef(null);
   const { setPlayer } = usePlayer();
-  const { roomData } = useRoom();
-  const clientId = localStorage.getItem("clientId");
-  const currentUser = roomData?.users.find((u) => u.clientId === clientId);
-  let isAdmin = currentUser?.isAdmin || false;
+  let { roomData, isAdmin } = useRoom();
   isAdmin = true;
   const iframeId = "yt-player";
   const videoId = roomData?.currentVideoId || "6KcV1C1Ui5s";
 
   const handlePlayerReady = (playerInst) => {
     setPlayer(playerInst);
-    if (!isAdmin) {
-      playerInst.mute();
-    }
+    playerInst.mute();
     if (roomData) {
       playerInst.seekTo(roomData.currentTime, true);
       if (roomData.isPlaying) {
@@ -47,9 +43,26 @@ const useYoutubePlayer = () => {
           if (handlePlayerReady) {
             handlePlayerReady(event.target);
           }
-          // if (!isAdmin) {
-          //   syncToTargetTime(false);
-          // }
+          if (!isAdmin) {
+            syncToTargetTime(playerRef,roomDataRef,false);
+          }
+        },
+        onStateChange: (event) => {
+          if (isAdmin) {
+            if (handlePlaybackControlRef.current) {
+              if (event.data === 1) {
+                handlePlaybackControlRef.current(
+                  true,
+                  event.target.getCurrentTime(),
+                );
+              } else if (event.data === 2) {
+                handlePlaybackControlRef.current(
+                  false,
+                  event.target.getCurrentTime(),
+                );
+              }
+            }
+          } else if (event.data === 1) syncToTargetTime(playerRef,roomDataRef,true);
         },
       },
     });
@@ -67,7 +80,9 @@ const useYoutubePlayer = () => {
           initPlayer();
         }
       }, 100);
-      let scriptTag = document.querySelector('script[src="https://www.youtube.com/iframe_api"]');
+      let scriptTag = document.querySelector(
+        'script[src="https://www.youtube.com/iframe_api"]',
+      );
       if (!scriptTag) {
         scriptTag = document.createElement("script");
         scriptTag.src = "https://www.youtube.com/iframe_api";
@@ -78,13 +93,16 @@ const useYoutubePlayer = () => {
 
     return () => {
       if (checkInterval) clearInterval(checkInterval);
-      if (playerRef.current && typeof playerRef.current.destroy === "function") {
+      if (
+        playerRef.current &&
+        typeof playerRef.current.destroy === "function"
+      ) {
         playerRef.current.destroy();
       }
     };
   }, [isAdmin]);
 
-  return playerRef;
+  return { playerRef };
 };
 
 export default useYoutubePlayer;
