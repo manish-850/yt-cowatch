@@ -1,11 +1,11 @@
 import Form from "../components/form/Form";
-import { useEffect, useContext } from "react";
-import { RoomDataContext } from "../context/RoomContext";
+import { useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import Loading from "../components/Loading/Loading";
+import useRoom from "@/hooks/room/useRoom";
 
 const JoinPage = () => {
-  const { isJoined, roomId, isLoading} = useContext(RoomDataContext);
+  const { isJoined, roomId, isLoading} = useRoom();
   const navigate = useNavigate();
 
   useEffect(() => {

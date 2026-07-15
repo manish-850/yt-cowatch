@@ -1,16 +1,16 @@
-import { useState, useEffect, useRef, useContext } from "react";
+import { useState, useEffect, useRef} from "react";
 import { Send } from "lucide-react";
 import "./chat.css";
-import { RoomDataContext } from "../../context/RoomContext";
 import { handleSendMessage } from "../../services/socket";
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button";
+import useRoom from "@/hooks/room/useRoom";
 
 export default function Chat() {
   const [text, setText] = useState("");
   const messagesEndRef = useRef(null);
 
-  const { messages } = useContext(RoomDataContext);
+  const { messages } = useRoom();
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

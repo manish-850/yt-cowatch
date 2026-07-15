@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { createContext, useState } from 'react';
 
-export const RoomDataContext = React.createContext();
+export const RoomDataContext = createContext();
 
 const RoomContext = ({ children }) => {
   const [isJoined, setIsJoined] = useState(false);
@@ -9,6 +9,7 @@ const RoomContext = ({ children }) => {
   const [messages, setMessages] = useState([]);
   const [username, setUsername] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false)
 
   return (
     <RoomDataContext.Provider
@@ -25,6 +26,8 @@ const RoomContext = ({ children }) => {
         setUsername,
         isLoading,
         setIsLoading,
+        isAdmin,
+        setIsAdmin
       }}
     >
       {children}

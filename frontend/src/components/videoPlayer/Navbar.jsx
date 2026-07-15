@@ -1,17 +1,15 @@
 import { Volume2, VolumeX, LogOut } from "lucide-react";
 import RoomControls from "./RoomControls";
-import { useContext } from "react";
-import { RoomDataContext } from "../../context/RoomContext";
-import { PlayerDataContext } from "../../context/PlayerContext";
 import { disconnectSocket } from "../../services/socket";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import usePlayer from "@/hooks/player/usePlayer";
+import useRoom from "@/hooks/room/useRoom";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const { player, isMuted, setIsMuted, setPlayer } =
-    useContext(PlayerDataContext);
+  const { player, isMuted, setIsMuted, setPlayer } = usePlayer()
   const {
     roomId,
     roomData,
@@ -20,7 +18,7 @@ const Navbar = () => {
     setIsJoined,
     setIsLoading,
     setUsername
-  } = useContext(RoomDataContext);
+  } = useRoom()
   const clientId = localStorage.getItem("clientId");
   const currentUser = roomData?.users.find((u) => u.clientId === clientId);
   const isAdmin = currentUser?.isAdmin || false;
