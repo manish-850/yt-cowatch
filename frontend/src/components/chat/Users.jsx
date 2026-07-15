@@ -1,10 +1,9 @@
 import { Shield } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { useContext } from "react";
-import { RoomDataContext } from "../../context/RoomContext";
+import useRoom from "@/hooks/room/useRoom";
 
 const Users = () => {
-    const { roomData} = useContext(RoomDataContext);
+    const { roomData} = useRoom()
   return (
         <div className="user-list">
           {roomData?.users.map((user) => {
