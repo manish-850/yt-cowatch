@@ -9,7 +9,7 @@ const useYoutubePlayer = (roomDataRef,handlePlaybackControlRef) => {
   let { roomData, isAdmin } = useRoom();
   isAdmin = true;
   const iframeId = "yt-player";
-  const videoId = roomData?.currentVideoId || "6KcV1C1Ui5s";
+  const videoId = roomData?.currentVideoId || null;
 
   const handlePlayerReady = (playerInst) => {
     setPlayer(playerInst);
@@ -38,7 +38,7 @@ const useYoutubePlayer = (roomDataRef,handlePlaybackControlRef) => {
       },
       events: {
         onReady: (event) => {
-          console.log("YT READY");
+          console.log("YT READY : ", event);
           playerRef.current = event.target;
           if (handlePlayerReady) {
             handlePlayerReady(event.target);
@@ -80,9 +80,7 @@ const useYoutubePlayer = (roomDataRef,handlePlaybackControlRef) => {
           initPlayer();
         }
       }, 100);
-      let scriptTag = document.querySelector(
-        'script[src="https://www.youtube.com/iframe_api"]',
-      );
+      let scriptTag = document.querySelector('script[src="https://www.youtube.com/iframe_api"]');
       if (!scriptTag) {
         scriptTag = document.createElement("script");
         scriptTag.src = "https://www.youtube.com/iframe_api";

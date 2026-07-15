@@ -1,5 +1,4 @@
 import "./videoPlayer.css";
-
 import useInitialSync from "@/hooks/youtube/useInitialSync";
 import usePlaybackSocket from "@/hooks/youtube/usePlaybackSocket";
 import usePlaybackControll from "@/hooks/youtube/usePlaybackControll";

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { createContext, useState } from 'react';
 
-export const RoomDataContext = React.createContext();
+export const RoomDataContext = createContext();
 
 const RoomContext = ({ children }) => {
   const [isJoined, setIsJoined] = useState(false);

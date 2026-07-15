@@ -46,11 +46,9 @@ useEffect(() => {
       const currentUser = data.users.find(
         (user) => user.clientId === clientId,
       );
-      // console.log("Room update received:", data);
-      console.log("currentUser : ", currentUser);
       setRoomData(data);
-      setIsAdmin(currentUser?.isAdmin);
       if (currentUser) {
+        setIsAdmin(currentUser?.isAdmin);
         setUsername(currentUser.username);
         setIsLoading(false);
       }

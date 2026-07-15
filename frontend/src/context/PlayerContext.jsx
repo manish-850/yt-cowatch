@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { createContext, useState } from 'react';
 
-export const PlayerDataContext = React.createContext();
+export const PlayerDataContext = createContext();
 
 const PlayerContext = ({ children }) => {
   const [player, setPlayer] = useState(null);

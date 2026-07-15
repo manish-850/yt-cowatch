@@ -1,10 +1,10 @@
 import "./form.css";
-import { useContext, useEffect, useState } from "react";
-import { RoomDataContext } from "../../context/RoomContext";
+import { useEffect, useState } from "react";
 import { generateRoomId } from "../../utils/roomId";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { InputField } from "./InputField";
+import useRoom from "@/hooks/room/useRoom";
 
 const Form = () => {
   const {
@@ -14,7 +14,7 @@ const Form = () => {
     username,
     setUsername,
     setIsLoading,
-  } = useContext(RoomDataContext);
+  } = useRoom()
   const [stars, setStars] = useState(2);
   const handleJoin = (e) => {
     e.preventDefault();
