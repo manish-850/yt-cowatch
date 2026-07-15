@@ -1,15 +1,12 @@
 # ytsync
 
-A real-time YouTube watch party application that lets multiple users watch YouTube videos together with synchronized playback and live chat.
+A real-time youtube sync application that lets multiple users to watch youtube videos together with synchronized playback and live chat.
 
 Built with **React**, **Express**, **Socket.IO**, and the **YouTube IFrame API**.
 
 > **Status:** Active Development
 
-> **Acknowledgement**
->
-> This project is fork of **yt-cowatch** by GitUtk. It has been extensively refactored with a redesigned architecture, reusable UI components, improved synchronization logic, and ongoing feature development.
-> This project is fork of **yt-cowatch** by GitUtk. It has been extensively refactored with a redesigned architecture, reusable UI components, improved synchronization logic, and ongoing feature development.
+> **Acknowledgement** This project is fork of **yt-cowatch** by GitUtk.
 
 ---
 
@@ -17,19 +14,12 @@ Built with **React**, **Express**, **Socket.IO**, and the **YouTube IFrame API**
 
 - Real-time synchronized YouTube playback
 - Create and join rooms instantly
-- Create and join rooms instantly
 - Admin-controlled playback
-- Live chat
-- Automatic room restoration after page refresh
 - Live chat
 - Automatic room restoration after page refresh
 - Persistent user identity using `clientId`
 - Username persistence with Local Storage
-- Username persistence with Local Storage
 - Shared room state across all participants
-- Responsive UI
-- Reusable UI components powered by **shadcn/ui**
-- Modular React architecture using custom hooks
 - Responsive UI
 - Reusable UI components powered by **shadcn/ui**
 - Modular React architecture using custom hooks
@@ -42,8 +32,6 @@ Built with **React**, **Express**, **Socket.IO**, and the **YouTube IFrame API**
 
 - React
 - Vite
-- shadcn/ui
-- Tailwind CSS v4
 - shadcn/ui
 - Tailwind CSS v4
 - Context API
@@ -61,24 +49,15 @@ Built with **React**, **Express**, **Socket.IO**, and the **YouTube IFrame API**
 - **Frontend:** Vercel
 - **Backend:** Railway
 
-## Deployment
-
-- **Frontend:** Vercel
-- **Backend:** Railway
-
 ---
 
 # How It Works
 
 ## Room Creation
-## Room Creation
 
 - Generate a unique room ID.
 - The first participant automatically becomes the room admin.
-- Generate a unique room ID.
-- The first participant automatically becomes the room admin.
 
-## Synchronization
 ## Synchronization
 
 The admin controls:
@@ -87,21 +66,15 @@ The admin controls:
 - Pause
 - Seek
 - Change video
-- Change video
 
-Every connected participant stays synchronized through Socket.IO events.
 Every connected participant stays synchronized through Socket.IO events.
 
 ## Automatic Reconnection
-## Automatic Reconnection
 
-After refreshing the page:
 After refreshing the page:
 
 - `clientId` is restored from Local Storage.
 - Username is restored automatically.
-- The user rejoins the existing room.
-- Room state is synchronized without creating duplicate users.
 - The user rejoins the existing room.
 - Room state is synchronized without creating duplicate users.
 
@@ -113,15 +86,6 @@ After refreshing the page:
 ytsync
 │
 ├── frontend
-│   ├── src
-│   │   ├── components
-│   │   ├── context
-│   │   ├── hooks
-│   │   ├── pages
-│   │   ├── services
-│   │   ├── utils
-│   │   └── ui
-│   └── public
 │   ├── src
 │   │   ├── components
 │   │   ├── context
@@ -148,17 +112,12 @@ ytsync
 # Improvements Over Original Project
 
 - Refactored project architecture
-- Refactored project architecture
 - Modular component structure
 - Custom React hooks
 - Dedicated Socket.IO service layer
 - Improved Context API state management
-- Dedicated Socket.IO service layer
-- Improved Context API state management
 - Automatic room restoration after refresh
 - Persistent user identity with `clientId`
-- Cleaner synchronization logic
-- Reusable UI components with shadcn/ui
 - Cleaner synchronization logic
 - Reusable UI components with shadcn/ui
 - Better maintainability and scalability
@@ -167,7 +126,6 @@ ytsync
 
 # Getting Started
 
-## Clone the repository
 ## Clone the repository
 
 ```bash
@@ -199,16 +157,11 @@ npm start
 - Join room
 - Live synchronization
 - Play/Pause synchronization
-- Play/Pause synchronization
 - Seek synchronization
-- Change video synchronization
 - Change video synchronization
 - Live chat
 - Automatic room restoration
-- Automatic room restoration
 - Persistent user identity
-- Responsive UI
-- shadcn/ui integration
 - Responsive UI
 - shadcn/ui integration
 
@@ -221,12 +174,6 @@ npm start
 - Persistent chat history
 - Room expiration
 - Mobile UI improvements
-- Authentication
-- Invite links
-- Emoji reactions
-- Theme switching
-- Authentication
-- Invite links
 - Emoji reactions
 - Theme switching
 
@@ -279,9 +226,7 @@ git push origin feature/my-feature
 # Credits
 
 Original project: https://github.com/GitUtk/yt-cowatch
-Original project: https://github.com/GitUtk/yt-cowatch
 
-This repository continues development with significant architectural improvements, redesigned synchronization logic, reusable UI components, and additional real-time features.
 This repository continues development with significant architectural improvements, redesigned synchronization logic, reusable UI components, and additional real-time features.
 
 ---
