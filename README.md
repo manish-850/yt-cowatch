@@ -129,8 +129,8 @@ ytsync
 ## Clone the repository
 
 ```bash
-git clone https://github.com/manish-850/yt-cowatch.git
-cd yt-cowatch
+git clone https://github.com/manish-850/ytsync.git
+cd ytsync
 ```
 
 ## Frontend
