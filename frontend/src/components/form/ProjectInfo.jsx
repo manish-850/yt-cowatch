@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'
-import Star from './svg/Star';
-import Github from './svg/github';
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import Star from "../svg/Star";
+import Github from "../svg/Github";
 
 const ProjectInfo = () => {
-    const [stars, setStars] = useState(2);
+  const [stars, setStars] = useState(2);
   useEffect(() => {
     (async () => {
       const res = await fetch("https://api.github.com/repos/manish-850/ytsync");
@@ -14,20 +14,21 @@ const ProjectInfo = () => {
   }, []);
   return (
     <div className="project-info">
-          <div className="star">
-            <Star/>
-            <small>{stars}</small>
-          </div>
-          <div className="github">
-            <Link
-              target="_blank"
-              rel="noopener noreferrer"
-              to="https://github.com/manish-850/ytsync">
-              <Github/>
-            </Link>
-          </div>
-        </div>
-  )
-}
+      <div className="star">
+        <Star />
+        <small>{stars}</small>
+      </div>
+      <div className="github">
+        <Link
+          target="_blank"
+          rel="noopener noreferrer"
+          to="https://github.com/manish-850/ytsync"
+        >
+          <Github />
+        </Link>
+      </div>
+    </div>
+  );
+};
 
-export default ProjectInfo
+export default ProjectInfo;

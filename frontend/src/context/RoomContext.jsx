@@ -1,15 +1,16 @@
-import { createContext, useState } from 'react';
+import { createContext, useState, useRef } from "react";
 
 export const RoomDataContext = createContext();
 
 const RoomContext = ({ children }) => {
   const [isJoined, setIsJoined] = useState(false);
   const [roomId, setRoomId] = useState("");
-  const [roomData, setRoomData] = useState(null);
+  const roomDataRef = useRef(null);
   const [messages, setMessages] = useState([]);
   const [username, setUsername] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [videoId, setVideoId] = useState("");
 
   return (
     <RoomDataContext.Provider
@@ -18,8 +19,7 @@ const RoomContext = ({ children }) => {
         setIsJoined,
         roomId,
         setRoomId,
-        roomData,
-        setRoomData,
+        roomDataRef,
         messages,
         setMessages,
         username,
@@ -27,7 +27,9 @@ const RoomContext = ({ children }) => {
         isLoading,
         setIsLoading,
         isAdmin,
-        setIsAdmin
+        setIsAdmin,
+        videoId,
+        setVideoId,
       }}
     >
       {children}

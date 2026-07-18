@@ -1,7 +1,9 @@
 import { socket } from "@/services/socket";
 import { useEffect } from "react";
+import usePlayer from "../player/usePlayer";
 
-const usePlaybackSocket = (playerRef) => {
+const usePlaybackSocket = () => {
+  const { playerRef } = usePlayer()
   useEffect(() => {
     if (!socket) return;
 

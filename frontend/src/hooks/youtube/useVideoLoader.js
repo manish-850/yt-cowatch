@@ -1,25 +1,25 @@
 import { useEffect } from "react";
 import useRoom from "../room/useRoom";
+import usePlayer from "../player/usePlayer";
 
-
-const useVideoLoader = (playerRef) => {
-    const { roomData } = useRoom();
-    const videoId = roomData?.currentVideoId || "6KcV1C1Ui5s";
+const useVideoLoader = () => {
+  const { roomDataRef, videoId } = useRoom();
+  const { playerRef } = usePlayer();
   useEffect(() => {
-  console.log("videoId changed:", videoId);
+    console.log("videoId changed:", videoId);
 
-  if (!roomData) return;
+    if (!roomDataRef.current) return;
 
-  // hasSyncedRef.current = false;
-  const player = playerRef.current;
+    // hasSyncedRef.current = false;
+    const player = playerRef.current;
 
-  console.log("player:", player);
+    console.log("player:", player);
 
-  if (player && typeof player.loadVideoById === "function") {
-    console.log("Loading video:", videoId);
-    player.loadVideoById({ videoId });
-  }
-}, [videoId,playerRef.current]);
-}
+    if (player && typeof player.loadVideoById === "function") {
+      console.log("Loading video:", videoId);
+      player.loadVideoById({ videoId });
+    }
+  }, [videoId, playerRef.current]);
+};
 
-export default useVideoLoader
+export default useVideoLoader;

@@ -9,19 +9,19 @@ import useRoom from "@/hooks/room/useRoom";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const { player, isMuted, setIsMuted, setPlayer } = usePlayer()
+  const { playerRef, isMuted, setIsMuted } = usePlayer();
+  const player = playerRef.current;
   const {
     roomId,
-    roomData,
-    setRoomData,
+    roomDataRef,
     setMessages,
     setIsJoined,
     setIsLoading,
-    setUsername
-  } = useRoom()
-  const clientId = localStorage.getItem("clientId");
-  const currentUser = roomData?.users.find((u) => u.clientId === clientId);
-  const isAdmin = currentUser?.isAdmin || false;
+    setUsername,
+    setRoomId,
+    isAdmin,
+    setVideoId
+  } = useRoom();
   const [isLeaved, setIsLeaved] = useState(false);
   const toggleMute = () => {
     if (player && typeof player.mute === "function") {
@@ -38,17 +38,18 @@ const Navbar = () => {
   const handleLeave = () => {
     disconnectSocket();
     setIsLeaved(true);
-    setRoomData(null);
+    roomDataRef.current = null;
     setMessages([]);
-    setPlayer(null);
+    playerRef.current = null;
     setIsMuted(true);
     setIsJoined(false);
     setIsLoading(false);
     setUsername("");
+    setRoomId("");
+    setVideoId("");
     localStorage.removeItem("clientId");
     localStorage.removeItem("username");
   };
-
 
   useEffect(() => {
     if (isLeaved) return navigate("/");
@@ -62,11 +63,7 @@ const Navbar = () => {
         <Button variant="secondary" size="icon" onClick={toggleMute}>
           {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
         </Button>
-        <Button
-          onClick={handleLeave}
-          variant="destructive"
-          size="icon"
-        >
+        <Button onClick={handleLeave} variant="destructive" size="icon">
           <LogOut size={18} />
         </Button>
       </div>
