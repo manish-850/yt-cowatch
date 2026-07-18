@@ -3,12 +3,13 @@ import Sidebar from "../components/videoPlayer/Sidebar";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getSocket } from "../services/socket";
-import useVideoUpdate from "../hooks/socket/useVideoUpdate";
+import useVideoUpdate from "../hooks/youtube/useVideoUpdate";
 import { generateName } from "../utils/username";
 import Loading from "../components/Loading/Loading";
 import { useMemo } from "react";
 import usePlayer from "@/hooks/player/usePlayer";
 import useRoom from "@/hooks/room/useRoom";
+import useSocket from "@/hooks/socket/useSocket";
 
 const RoomPage = () => {
   const { roomId } = useParams();
@@ -18,7 +19,8 @@ const RoomPage = () => {
     setRoomId,
     setMessages,
     roomData,
-    setIsAdmin
+    setIsAdmin,
+    isJoined
   } = useRoom();
   const [isLoading, setIsLoading] = useState(true);
   const { player } = usePlayer();
@@ -31,6 +33,8 @@ const RoomPage = () => {
   }
   return id;
 }, []);
+
+useSocket(isJoined);
 
 useEffect(() => {
   let uName = localStorage.getItem("username");
