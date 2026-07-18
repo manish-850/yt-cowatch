@@ -2,7 +2,7 @@
  import { useEffect } from "react";
  const useSocket = (isJoined) => {
     useEffect(() => {
-    if (!isJoined) return;
+    if (isJoined) return;
     initSocket();
   }, [isJoined]);
  }

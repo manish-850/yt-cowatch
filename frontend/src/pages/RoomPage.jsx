@@ -1,67 +1,71 @@
 import VideoContainer from "../components/videoPlayer/VideoContainer";
 import Sidebar from "../components/videoPlayer/Sidebar";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { getSocket } from "../services/socket";
-import useVideoUpdate from "../hooks/socket/useVideoUpdate";
+import useVideoUpdate from "../hooks/youtube/useVideoUpdate";
 import { generateName } from "../utils/username";
 import Loading from "../components/Loading/Loading";
-import { useMemo } from "react";
 import usePlayer from "@/hooks/player/usePlayer";
 import useRoom from "@/hooks/room/useRoom";
+import useSocket from "@/hooks/socket/useSocket";
+import { toast } from "sonner";
 
 const RoomPage = () => {
   const { roomId } = useParams();
   const {
-    setRoomData,
+    roomDataRef,
     setUsername,
     setRoomId,
     setMessages,
-    roomData,
-    setIsAdmin
+    setIsAdmin,
+    isJoined,
+    setIsJoined,
   } = useRoom();
   const [isLoading, setIsLoading] = useState(true);
-  const { player } = usePlayer();
+  const { playerRef } = usePlayer();
+  const player = playerRef.current;
 
   const clientId = useMemo(() => {
-  let id = localStorage.getItem("clientId");
-  if (!id) {
-    id = crypto.randomUUID();
-    localStorage.setItem("clientId", id);
-  }
-  return id;
-}, []);
+    let id = localStorage.getItem("clientId");
+    if (!id) {
+      id = crypto.randomUUID();
+      localStorage.setItem("clientId", id);
+    }
+    return id;
+  }, []);
 
-useEffect(() => {
-  let uName = localStorage.getItem("username");
-  if (!uName) {
-    uName = generateName();
-    localStorage.setItem("username", uName);
-  }
-  setUsername(uName);
-}, [setUsername]);
+  useSocket(isJoined);
+
+  useEffect(() => {
+    let uName = localStorage.getItem("username");
+    if (!uName) {
+      uName = generateName();
+      localStorage.setItem("username", uName);
+    }
+    setUsername(uName);
+  }, [roomId]);
 
   useEffect(() => {
     const handleRoomUpdate = (data) => {
-      const currentUser = data.users.find(
-        (user) => user.clientId === clientId,
-      );
-      setRoomData(data);
+      const currentUser = data.users.find((user) => user.clientId === clientId);
       if (currentUser) {
+        roomDataRef.current = data;
         setIsAdmin(currentUser?.isAdmin);
-        setUsername(currentUser.username);
+        setUsername(currentUser?.username);
         setIsLoading(false);
+        setIsJoined(true);
+        setRoomId(roomId);
       }
     };
     const handleChat = (msg) => {
       setMessages((prev) => [...prev, msg]);
     };
-    setRoomId(roomId);
     const s = getSocket();
     s.on("room-update", handleRoomUpdate);
     s.emit("join-room", {
       roomId,
-      username : localStorage.getItem("username"), // can't use username bcz react takes time to update the state
+      username: localStorage.getItem("username"),
       clientId,
     });
     s.on("chat-message", handleChat);
@@ -70,13 +74,16 @@ useEffect(() => {
     };
   }, [roomId]);
 
-  useVideoUpdate(player, roomData);
+  useVideoUpdate();
+  useEffect(() => {
+    if (player) toast.success("YT player ready");
+  }, [player]);
 
-  if(isLoading) return <Loading/>
+  if (isLoading) return <Loading />;
   return (
     <div className="app-container">
       <VideoContainer />
-      <Sidebar/>
+      <Sidebar />
     </div>
   );
 };

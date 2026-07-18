@@ -1,12 +1,10 @@
+import usePlayer from "@/hooks/player/usePlayer";
+import useRoom from "@/hooks/room/useRoom";
 import { useRef } from "react";
 
-
-
-export const syncToTargetTime = (
-  playerRef,
-  roomDataRef,
-  isFromPlayingState = false,
-) => {
+export const syncToTargetTime = (isFromPlayingState = false) => {
+  const { playerRef } = usePlayer();
+  const { roomDataRef } = useRoom();
   const hasSyncedRef = useRef(false);
   if (hasSyncedRef.current) return;
   const player = playerRef.current;

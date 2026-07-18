@@ -1,18 +1,16 @@
 import useRoom from "../room/useRoom";
 import usePlayer from "../player/usePlayer";
-import { useEffect, useRef } from "react";
+import { useEffect,} from "react";
 import { syncToTargetTime } from "@/utils/syncToTargetTime";
 
-const useYoutubePlayer = (roomDataRef,handlePlaybackControlRef) => {
-  const playerRef = useRef(null);
-  const { setPlayer } = usePlayer();
-  let { roomData, isAdmin } = useRoom();
-  isAdmin = true;
+const useYoutubePlayer = (handlePlaybackControlRef) => {
+  const { playerRef } = usePlayer();
+  const { roomDataRef, isAdmin, videoId } = useRoom();
+  const roomData = roomDataRef.current;
   const iframeId = "yt-player";
-  const videoId = roomData?.currentVideoId || null;
 
   const handlePlayerReady = (playerInst) => {
-    setPlayer(playerInst);
+    playerRef.current = playerInst;
     playerInst.mute();
     if (roomData) {
       playerInst.seekTo(roomData.currentTime, true);
@@ -44,7 +42,7 @@ const useYoutubePlayer = (roomDataRef,handlePlaybackControlRef) => {
             handlePlayerReady(event.target);
           }
           if (!isAdmin) {
-            syncToTargetTime(playerRef,roomDataRef,false);
+            syncToTargetTime(playerRef, roomDataRef, false);
           }
         },
         onStateChange: (event) => {
@@ -62,7 +60,8 @@ const useYoutubePlayer = (roomDataRef,handlePlaybackControlRef) => {
                 );
               }
             }
-          } else if (event.data === 1) syncToTargetTime(playerRef,roomDataRef,true);
+          } else if (event.data === 1)
+            syncToTargetTime(playerRef, roomDataRef, true);
         },
       },
     });
@@ -80,7 +79,9 @@ const useYoutubePlayer = (roomDataRef,handlePlaybackControlRef) => {
           initPlayer();
         }
       }, 100);
-      let scriptTag = document.querySelector('script[src="https://www.youtube.com/iframe_api"]');
+      let scriptTag = document.querySelector(
+        'script[src="https://www.youtube.com/iframe_api"]',
+      );
       if (!scriptTag) {
         scriptTag = document.createElement("script");
         scriptTag.src = "https://www.youtube.com/iframe_api";
@@ -99,8 +100,6 @@ const useYoutubePlayer = (roomDataRef,handlePlaybackControlRef) => {
       }
     };
   }, [isAdmin]);
-
-  return { playerRef };
 };
 
 export default useYoutubePlayer;

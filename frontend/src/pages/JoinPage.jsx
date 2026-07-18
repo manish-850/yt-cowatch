@@ -1,19 +1,25 @@
 import Form from "../components/form/Form";
 import { useEffect} from "react";
 import { useNavigate } from "react-router-dom";
-import Loading from "../components/Loading/Loading";
 import useRoom from "@/hooks/room/useRoom";
+import ProjectInfo from "@/components/form/ProjectInfo";
 
 const JoinPage = () => {
-  const { isJoined, roomId, isLoading} = useRoom();
+  const { roomId, isLoading} = useRoom();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isJoined && isLoading) navigate(`/room/${roomId}`);
-  }, [isJoined, isLoading, roomId]);
+    if (isLoading) navigate(`/room/${roomId}`);
+  }, [isLoading, roomId]);
 
-  if (isLoading) return <Loading />;
-  if (!isLoading && !isJoined) return <Form />;
+  if (!isLoading) return (
+    <div className="join-container">
+      <div className="form-wrapper">
+        <Form/>
+        <ProjectInfo/>
+      </div>
+      </div>
+  );
 };
 
 export default JoinPage;

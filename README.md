@@ -47,7 +47,7 @@ Built with **React**, **Express**, **Socket.IO**, and the **YouTube IFrame API**
 ## Deployment
 
 - **Frontend:** Vercel
-- **Backend:** Railway
+- **Backend:** Render
 
 ---
 
@@ -97,9 +97,6 @@ ytsync
 │   └── public
 │
 ├── backend
-│   ├── server.js
-│   ├── rooms.js
-│   └── package.json
 │   ├── server.js
 │   ├── rooms.js
 │   └── package.json
@@ -190,11 +187,6 @@ Contributions are welcome.
 git checkout -b feature/my-feature
 ```
 
-
-```bash
-git checkout -b feature/my-feature
-```
-
 3. Commit your changes.
 
 ```bash
@@ -212,16 +204,6 @@ git push origin feature/my-feature
 ```bash
 git commit -m "feat: add awesome feature"
 ```
-
-4. Push the branch.
-
-```bash
-git push origin feature/my-feature
-```
-
-5. Open a Pull Request.
-
----
 
 # Credits
 
