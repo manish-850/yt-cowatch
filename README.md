@@ -1,16 +1,12 @@
 # ytsync
 
-A real-time YouTube watch party application that lets multiple users watch YouTube videos together with synchronized playback and live chat.
+A real-time youtube sync application that lets multiple users to watch youtube videos together with synchronized playback and live chat.
 
 Built with **React**, **Express**, **Socket.IO**, and the **YouTube IFrame API**.
 
 > **Status:** Active Development
 
-> **Status:** Active Development
-
-> **Acknowledgement**
->
-> This project is fork of **yt-cowatch** by GitUtk. It has been extensively refactored with a redesigned architecture, reusable UI components, improved synchronization logic, and ongoing feature development.
+> **Acknowledgement** This project is fork of **yt-cowatch** by GitUtk.
 
 ---
 
@@ -51,7 +47,7 @@ Built with **React**, **Express**, **Socket.IO**, and the **YouTube IFrame API**
 ## Deployment
 
 - **Frontend:** Vercel
-- **Backend:** Railway
+- **Backend:** Render
 
 ---
 
@@ -130,8 +126,8 @@ ytsync
 ## Clone the repository
 
 ```bash
-git clone https://github.com/manish-850/yt-cowatch.git
-cd yt-cowatch
+git clone https://github.com/manish-850/ytsync.git
+cd ytsync
 ```
 
 ## Frontend
@@ -175,8 +171,6 @@ npm start
 - Persistent chat history
 - Room expiration
 - Mobile UI improvements
-- Authentication
-- Invite links
 - Emoji reactions
 - Theme switching
 
@@ -207,7 +201,9 @@ git push origin feature/my-feature
 
 5. Open a Pull Request.
 
----
+```bash
+git commit -m "feat: add awesome feature"
+```
 
 # Credits
 
