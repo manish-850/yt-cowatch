@@ -1,23 +1,25 @@
 import useRoom from "../room/useRoom";
 import usePlayer from "../player/usePlayer";
-import { useEffect,} from "react";
+import { useEffect } from "react";
 import { syncToTargetTime } from "@/utils/syncToTargetTime";
+import { toast } from "sonner";
 
-const useYoutubePlayer = (handlePlaybackControlRef) => {
+const useYoutubePlayer = () => {
   const { playerRef } = usePlayer();
-  const { roomDataRef, isAdmin, videoId } = useRoom();
-  const roomData = roomDataRef.current;
+  const { roomDataRef, isAdmin, videoId, playbackControlRef } = useRoom();
   const iframeId = "yt-player";
-
-  const handlePlayerReady = (playerInst) => {
-    playerRef.current = playerInst;
-    playerInst.mute();
+  
+  const handlePlayerReady = () => {
+    const player = playerRef.current;
+    const roomData = roomDataRef.current;
+    console.log("roomData:", roomDataRef.current);
+    player.mute();
     if (roomData) {
-      playerInst.seekTo(roomData.currentTime, true);
+      player.seekTo(roomData.currentTime, true);
       if (roomData.isPlaying) {
-        playerInst.playVideo();
+        player.playVideo();
       } else {
-        playerInst.pauseVideo();
+        player.pauseVideo();
       }
     }
   };
@@ -36,10 +38,11 @@ const useYoutubePlayer = (handlePlaybackControlRef) => {
       },
       events: {
         onReady: (event) => {
-          console.log("YT READY : ", event);
+          console.log("YT READY : ", event.target);
           playerRef.current = event.target;
+          toast.success("YT player ready");
           if (handlePlayerReady) {
-            handlePlayerReady(event.target);
+            handlePlayerReady();
           }
           if (!isAdmin) {
             syncToTargetTime(playerRef, roomDataRef, false);
@@ -47,14 +50,14 @@ const useYoutubePlayer = (handlePlaybackControlRef) => {
         },
         onStateChange: (event) => {
           if (isAdmin) {
-            if (handlePlaybackControlRef.current) {
+            if (playbackControlRef.current) {
               if (event.data === 1) {
-                handlePlaybackControlRef.current(
+                playbackControlRef.current(
                   true,
                   event.target.getCurrentTime(),
                 );
               } else if (event.data === 2) {
-                handlePlaybackControlRef.current(
+                playbackControlRef.current(
                   false,
                   event.target.getCurrentTime(),
                 );
@@ -92,10 +95,8 @@ const useYoutubePlayer = (handlePlaybackControlRef) => {
 
     return () => {
       if (checkInterval) clearInterval(checkInterval);
-      if (
-        playerRef.current &&
-        typeof playerRef.current.destroy === "function"
-      ) {
+      if (playerRef.current && typeof playerRef.current.destroy === "function") {
+        console.log("Destroying player");
         playerRef.current.destroy();
       }
     };

@@ -4,12 +4,12 @@ import useRoom from "../room/useRoom";
 import usePlayer from "../player/usePlayer";
 
 const useVideoUpdate = () => {
-  const { roomDataRef } = useRoom();
+  const { roomDataRef, videoId } = useRoom();
   const { playerRef } = usePlayer();
   useEffect(() => {
     if (!socket || !playerRef.current) return;
     updateVideo(playerRef.current, roomDataRef.current);
-  }, [socket, playerRef.current, roomDataRef.current?.currentVideoId]);
+  }, [socket, videoId]);
 };
 
 export default useVideoUpdate;
