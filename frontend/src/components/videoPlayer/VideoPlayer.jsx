@@ -1,6 +1,6 @@
 import "./videoPlayer.css";
 import usePlaybackSocket from "@/hooks/youtube/usePlaybackSocket";
-import usePlaybackControll from "@/hooks/youtube/usePlaybackControll";
+// import usePlaybackControll from "@/hooks/youtube/usePlaybackControll";
 import useVideoLoader from "@/hooks/youtube/useVideoLoader";
 import useYoutubePlayer from "@/hooks/youtube/useYoutubePlayer";
 import useVideoUpdate from "@/hooks/youtube/useVideoUpdate";
@@ -11,7 +11,7 @@ export default function VideoPlayer() {
   const iframeId = "yt-player";
 
   useYoutubePlayer();
-  usePlaybackControll();
+  // usePlaybackControll();
   usePlaybackSocket();
   useVideoLoader();
   useVideoUpdate();

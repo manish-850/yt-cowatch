@@ -35,11 +35,11 @@ export function addUserToRoom(roomId, socketId, username, clientId) {
   return { room, user };
 }
 
-export function removeUserFromRoom(roomId, socketId) {
+export function removeUserFromRoom(roomId, clientId) {
   const room = rooms.get(roomId);
   if (!room) return null;
-  const user = room.users.get(socketId);
-  room.users.delete(socketId);
+  const user = room.users.get(clientId);
+  room.users.delete(clientId);
 
   if (user && room.users.size > 0 && user.isAdmin) {
     const nextUserId = room.users.keys().next().value;

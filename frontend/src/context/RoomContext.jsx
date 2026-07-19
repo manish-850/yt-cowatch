@@ -11,8 +11,6 @@ const RoomContext = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [videoId, setVideoId] = useState("");
-  const playbackControlRef = useRef(null)
-
   return (
     <RoomDataContext.Provider
       value={{
@@ -31,7 +29,6 @@ const RoomContext = ({ children }) => {
         setIsAdmin,
         videoId,
         setVideoId,
-        playbackControlRef
       }}
     >
       {children}

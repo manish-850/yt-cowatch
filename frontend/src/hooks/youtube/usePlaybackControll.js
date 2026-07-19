@@ -1,21 +1,14 @@
-import { useEffect } from "react";
-import { socket } from "@/services/socket";
+import { getSocket } from "@/services/socket";
 import useRoom from "../room/useRoom";
+import { useEffect } from "react";
 
 const usePlaybackControll = () => {
   const { playbackControlRef } = useRoom();
-
-  const handlePlaybackControl = (isPlaying, currentTime) => {
-    if (socket) {
-      console.log("handlePlaybackControl : ", isPlaying, currentTime);
-      socket.emit("playback-control", { isPlaying, currentTime });
-    }
-  };
-
+  const s = getSocket();
   useEffect(() => {
-    playbackControlRef.current = handlePlaybackControl;
-  }, []);
-
+    if (!s || !playbackControlRef.current) return;
+    s.emit("playback-control", playbackControlRef.current);
+  }, [playbackControlRef.current]);
 };
 
 export default usePlaybackControll;

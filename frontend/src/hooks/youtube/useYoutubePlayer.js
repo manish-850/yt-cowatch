@@ -2,13 +2,14 @@ import useRoom from "../room/useRoom";
 import usePlayer from "../player/usePlayer";
 import { useEffect } from "react";
 import { syncToTargetTime } from "@/utils/syncToTargetTime";
+import { handlePlaybackControl } from "@/utils/handlePlaybackControl";
 import { toast } from "sonner";
 
 const useYoutubePlayer = () => {
   const { playerRef } = usePlayer();
-  const { roomDataRef, isAdmin, videoId, playbackControlRef } = useRoom();
+  const { roomDataRef, isAdmin, videoId } = useRoom();
   const iframeId = "yt-player";
-  
+
   const handlePlayerReady = () => {
     const player = playerRef.current;
     const roomData = roomDataRef.current;
@@ -38,7 +39,7 @@ const useYoutubePlayer = () => {
       },
       events: {
         onReady: (event) => {
-          console.log("YT READY : ", event.target);
+          console.log("YT READY : ", event.data);
           playerRef.current = event.target;
           toast.success("YT player ready");
           if (handlePlayerReady) {
@@ -50,17 +51,11 @@ const useYoutubePlayer = () => {
         },
         onStateChange: (event) => {
           if (isAdmin) {
-            if (playbackControlRef.current) {
+            if (handlePlaybackControl) {
               if (event.data === 1) {
-                playbackControlRef.current(
-                  true,
-                  event.target.getCurrentTime(),
-                );
+                handlePlaybackControl(true, event.target.getCurrentTime());
               } else if (event.data === 2) {
-                playbackControlRef.current(
-                  false,
-                  event.target.getCurrentTime(),
-                );
+                handlePlaybackControl(false, event.target.getCurrentTime());
               }
             }
           } else if (event.data === 1)
@@ -95,7 +90,10 @@ const useYoutubePlayer = () => {
 
     return () => {
       if (checkInterval) clearInterval(checkInterval);
-      if (playerRef.current && typeof playerRef.current.destroy === "function") {
+      if (
+        playerRef.current &&
+        typeof playerRef.current.destroy === "function"
+      ) {
         console.log("Destroying player");
         playerRef.current.destroy();
       }
