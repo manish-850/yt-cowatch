@@ -6,20 +6,17 @@ const useVideoLoader = () => {
   const { roomDataRef, videoId } = useRoom();
   const { playerRef } = usePlayer();
   useEffect(() => {
-    console.log("videoId changed:", videoId);
-
+    // console.log("videoId changed:", videoId);
     if (!roomDataRef.current) return;
-
     // hasSyncedRef.current = false;
-    const player = playerRef.current;
-
-    console.log("player:", player);
-
-    if (player && typeof player.loadVideoById === "function") {
+    // console.log("player:", playerRef.current);
+    if (playerRef.current && typeof playerRef.current.loadVideoById === "function") {
       console.log("Loading video:", videoId);
-      player.loadVideoById({ videoId });
+      // console.log(playerRef.current);
+      // console.log(typeof playerRef.current?.loadVideoById);
+      playerRef.current.loadVideoById({ videoId });
     }
-  }, [videoId, playerRef.current]);
+  }, [videoId]);
 };
 
 export default useVideoLoader;

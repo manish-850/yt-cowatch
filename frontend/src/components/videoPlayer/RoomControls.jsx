@@ -6,7 +6,7 @@ import { socket } from "../../services/socket";
 import useRoom from "@/hooks/room/useRoom";
 
 export default function RoomControls() {
-  const [videoInput, setVideoInput] = useState("");
+  const [videoUrl, setVideoUrl] = useState("");
   const { setVideoId } = useRoom();
 
   const extractVideoId = (url) => {
@@ -23,12 +23,12 @@ export default function RoomControls() {
 
   const handleVideoSubmit = (e) => {
     e.preventDefault();
-    if (!videoInput.trim()) return;
-    const id = extractVideoId(videoInput);
+    if (!videoUrl.trim()) return;
+    const id = extractVideoId(videoUrl);
     setVideoId(id);
     if (id) {
       handleChangeVideo(id);
-      setVideoInput("");
+      setVideoUrl("");
     }
   };
 
@@ -38,8 +38,8 @@ export default function RoomControls() {
         <Input
           type="text"
           placeholder="Paste url or id"
-          value={videoInput}
-          onChange={(e) => setVideoInput(e.target.value)}
+          value={videoUrl}
+          onChange={(e) => setVideoUrl(e.target.value)}
         />
         <Button type="submit" variant="default" size="icon">
           <Video size={18} />

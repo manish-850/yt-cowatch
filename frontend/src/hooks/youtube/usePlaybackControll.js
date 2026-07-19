@@ -1,8 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { socket } from "@/services/socket";
+import useRoom from "../room/useRoom";
 
 const usePlaybackControll = () => {
-  const handlePlaybackControlRef = useRef(null);
+  const { playbackControlRef } = useRoom();
 
   const handlePlaybackControl = (isPlaying, currentTime) => {
     if (socket) {
@@ -12,10 +13,9 @@ const usePlaybackControll = () => {
   };
 
   useEffect(() => {
-    handlePlaybackControlRef.current = handlePlaybackControl;
-  }, [handlePlaybackControl]);
+    playbackControlRef.current = handlePlaybackControl;
+  }, []);
 
-  return { handlePlaybackControlRef }
 };
 
 export default usePlaybackControll;
