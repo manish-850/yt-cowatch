@@ -2,7 +2,7 @@ import { socket } from "@/services/socket";
 import { useEffect } from "react";
 import usePlayer from "../player/usePlayer";
 
-const usePlaybackSocket = () => {
+const usePlaybackSync = () => {
   const { playerRef } = usePlayer();
   useEffect(() => {
     if (!socket) return;
@@ -33,4 +33,4 @@ const usePlaybackSocket = () => {
   }, [socket]);
 };
 
-export default usePlaybackSocket;
+export default usePlaybackSync;

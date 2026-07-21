@@ -13,15 +13,11 @@ const useYoutubePlayer = () => {
   const handlePlayerReady = () => {
     const player = playerRef.current;
     const roomData = roomDataRef.current;
-    console.log("roomData:", roomDataRef.current);
     player.mute();
     if (roomData) {
       player.seekTo(roomData.currentTime, true);
-      if (roomData.isPlaying) {
-        player.playVideo();
-      } else {
-        player.pauseVideo();
-      }
+      if (roomData.isPlaying) player.playVideo();
+      else player.pauseVideo();
     }
   };
   const initPlayer = () => {
