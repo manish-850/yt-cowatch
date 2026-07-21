@@ -42,16 +42,15 @@ io.on("connection", (socket) => {
   let currentUsername = null;
   let currentClientId = null;
 
-  socket.on("join-room", ({ roomId, username, clientId }) => {
+  socket.on("join-room", ({ roomId, username, clientId, clientTime }) => {
     currentRoomId = roomId;
     currentUsername = username;
     currentClientId = clientId;
-    // console.log("JOIN EVENT", socket.id, roomId);
 
     socket.join(roomId);
     const { room } = addUserToRoom(roomId, socket.id, username, clientId);
 
-    io.to(roomId).emit("room-update", getRoomData(room));
+    io.to(roomId).emit("room-update", getRoomData(room, clientTime));
     io.to(roomId).emit("chat-message", {
       sender: "System",
       text: `${username} joined the room.`,
@@ -66,19 +65,13 @@ io.on("connection", (socket) => {
     });
   });
 
-  socket.on("change-video", ({ videoId }) => {
-    // console.log("Backend: ", videoId);
-    // console.log("RoomId: ", currentRoomId);
+  socket.on("change-video", ({ videoId, clientTime }) => {
     if (!currentRoomId) return;
     const room = getOrCreateRoom(currentRoomId);
     const activeUser = room.users.get(currentClientId);
-    // console.log(room.users);
-    // console.log(room.users.keys());
-    // console.log("socket.id:", socket.id);
-    // console.log("activeUser: ", activeUser);
     if (activeUser && activeUser.isAdmin) {
       updateRoomVideo(currentRoomId, videoId);
-      io.to(currentRoomId).emit("room-update", getRoomData(room));
+      io.to(currentRoomId).emit("room-update", getRoomData(room, clientTime));
       io.to(currentRoomId).emit("chat-message", {
         sender: "System",
         text: `${currentUsername} changed the video.`,
@@ -86,47 +79,52 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("playback-control", ({ isPlaying, currentTime }) => {
+  socket.on("playback-control", ({ isPlaying, currentTime, clientTime }) => {
     if (!currentRoomId) return;
-    const room = getOrCreateRoom(currentRoomId);
-    console.log("isPlaying :", isPlaying, "currentTime : ", currentTime);
+    let room = getOrCreateRoom(currentRoomId);
     const activeUser = room.users.get(currentClientId);
     if (activeUser && activeUser.isAdmin) {
-      updateRoomPlayback(currentRoomId, isPlaying, currentTime);
-      socket
-        .to(currentRoomId)
-        .emit("playback-sync", { isPlaying, currentTime });
-      const payload = getRoomData(room);
-      console.log("Sending:", payload);
-      io.to(currentRoomId).emit("room-update", payload);
+      room = updateRoomPlayback(
+        currentRoomId,
+        isPlaying,
+        currentTime,
+        clientTime,
+      );
+      socket.to(currentRoomId).emit("playback-sync", {
+        isPlaying,
+        currentTime: room.currentTime,
+        serverTime: room.serverTime,
+      });
+      io.to(currentRoomId).emit("room-update", getRoomData(room, clientTime));
     }
   });
 
-  socket.on("report-status", ({ videoId, isPlaying, currentTime }) => {
-    if (!currentRoomId) return;
-    const room = getOrCreateRoom(currentRoomId);
-    const activeUser = room.users.get(currentClientId);
-    if (activeUser) {
-      let roomTime = room.currentTime;
-      if (room.isPlaying) {
-        roomTime += (Date.now() - room.lastUpdateTime) / 1000;
+  socket.on(
+    "report-status",
+    ({ videoId, isPlaying, currentTime, clientTime }) => {
+      if (!currentRoomId) return;
+      const room = getOrCreateRoom(currentRoomId);
+      const activeUser = room.users.get(currentClientId);
+      console.log("Room : ", room);
+      if (activeUser) {
+        let roomTime = room.currentTime;
+        roomTime += (Date.now() - clientTime) / 1000;
+        const idMatch = videoId === room.currentVideoId;
+        const playMatch = isPlaying === room.isPlaying;
+        const timeMatch = Math.abs(currentTime - roomTime) < 1;
+        const isSynced =
+          idMatch && (room.isPlaying ? playMatch && timeMatch : true);
+        activeUser.status = {
+          isSynced,
+          currentTime: roomTime,
+        };
+        io.to(currentRoomId).emit("room-update", {
+          ...getRoomData(room, clientTime),
+          serverTime: Date.now(),
+        });
       }
-      const idMatch = videoId === room.currentVideoId;
-      const playMatch = isPlaying === room.isPlaying;
-      const timeMatch = Math.abs(currentTime - roomTime) < 3;
-      const isSynced =
-        idMatch && (room.isPlaying ? playMatch && timeMatch : true);
-      activeUser.status = {
-        isSynced,
-        currentTime,
-      };
-      // console.log("RoomId in report status : ", currentRoomId);
-      io.to(currentRoomId).emit("room-update", {
-        ...getRoomData(room),
-        receivedAt: Date.now(),
-      });
-    }
-  });
+    },
+  );
 
   socket.on("disconnect", () => {
     if (!currentRoomId) return;

@@ -3,17 +3,20 @@ import { useEffect } from "react";
 import usePlayer from "../player/usePlayer";
 
 const usePlaybackSocket = () => {
-  const { playerRef } = usePlayer()
+  const { playerRef } = usePlayer();
   useEffect(() => {
     if (!socket) return;
 
-    const handleSync = ({ isPlaying, currentTime }) => {
-      console.log("handle sync fired")
+    const handleSync = ({ isPlaying, currentTime, serverTime }) => {
+      console.log("handle sync fired");
       const player = playerRef.current;
       if (!player || typeof player.getPlayerState !== "function") return;
 
       const playerState = player.getPlayerState();
       const currentVideoTime = player.getCurrentTime();
+      // added delay for better sync
+      const delay = Date.now() - serverTime;
+      currentTime += delay;
 
       if (!isPlaying || Math.abs(currentVideoTime - currentTime) > 1) {
         player.seekTo(currentTime, true);
@@ -28,9 +31,9 @@ const usePlaybackSocket = () => {
 
     socket.on("playback-sync", handleSync);
     return () => {
-      if(socket) socket.off("playback-sync", handleSync);
+      if (socket) socket.off("playback-sync", handleSync);
     };
   }, [socket]);
-}
+};
 
-export default usePlaybackSocket
+export default usePlaybackSocket;

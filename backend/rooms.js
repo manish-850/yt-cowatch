@@ -1,6 +1,6 @@
 const rooms = new Map();
 
-export function getOrCreateRoom(roomId,socketId, username, clientId) {
+export function getOrCreateRoom(roomId, socketId, username, clientId) {
   if (!rooms.has(roomId)) {
     rooms.set(roomId, {
       id: roomId,
@@ -8,7 +8,7 @@ export function getOrCreateRoom(roomId,socketId, username, clientId) {
       currentVideoId: "dQw4w9WgXcQ",
       currentTime: 0,
       isPlaying: false,
-      lastUpdateTime: Date.now()
+      serverTime: Date.now(),
     });
   }
   return rooms.get(roomId);
@@ -24,9 +24,8 @@ export function deleteRoomIfEmpty(roomId) {
 export function addUserToRoom(roomId, socketId, username, clientId) {
   const room = getOrCreateRoom(roomId);
   const isAdmin = room.users.size === 0;
-  console.log("clientId in addUserToRoom:", clientId);
   let user = room.users.get(clientId);
-  if(user){
+  if (user) {
     user.id = socketId;
     user.username = username;
   } else {
@@ -51,11 +50,11 @@ export function removeUserFromRoom(roomId, clientId) {
   return { room, user };
 }
 
-export function getRoomData(room) {
+export function getRoomData(room, clientTime) {
   if (!room) return null;
   let time = room.currentTime;
   if (room.isPlaying) {
-    time += (Date.now() - room.lastUpdateTime) / 1000;
+    time += (Date.now() - clientTime) / 1000;
   }
   return {
     id: room.id,
@@ -64,11 +63,11 @@ export function getRoomData(room) {
       username: user.username,
       isAdmin: user.isAdmin,
       clientId: user.clientId,
-      status: user.status || { isSynced: true, currentTime: 0 }
+      status: user.status || { isSynced: true, currentTime: time },
     })),
     currentVideoId: room.currentVideoId,
     currentTime: time,
-    isPlaying: room.isPlaying
+    isPlaying: room.isPlaying,
   };
 }
 
@@ -78,15 +77,16 @@ export function updateRoomVideo(roomId, videoId) {
   room.currentVideoId = videoId;
   room.currentTime = 0;
   room.isPlaying = false;
-  room.lastUpdateTime = Date.now();
+  room.serverTime = Date.now();
   return room;
 }
 
-export function updateRoomPlayback(roomId, isPlaying, currentTime) {
+export function updateRoomPlayback(roomId, isPlaying, currentTime, clientTime) {
   const room = rooms.get(roomId);
+  const delay = (Date.now() - clientTime) / 1000;
   if (!room) return null;
   room.isPlaying = isPlaying;
-  room.currentTime = currentTime;
-  room.lastUpdateTime = Date.now();
+  room.currentTime = currentTime + delay;
+  room.serverTime = Date.now();
   return room;
 }

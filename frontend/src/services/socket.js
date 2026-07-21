@@ -27,9 +27,10 @@ export const updateVideo = (player, roomData) => {
     ) {
       const state = player.getPlayerState();
       socket?.emit("report-status", {
-        videoId: roomData?.currentVideoId || "6KcV1C1Ui5s",
+        videoId: roomData?.currentVideoId,
         isPlaying: state === 1,
         currentTime: player.getCurrentTime(),
+        clientTime : Date.now()
       });
     }
   }, 3000);

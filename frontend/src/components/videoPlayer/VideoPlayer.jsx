@@ -3,7 +3,7 @@ import usePlaybackSocket from "@/hooks/youtube/usePlaybackSocket";
 // import usePlaybackControll from "@/hooks/youtube/usePlaybackControll";
 import useVideoLoader from "@/hooks/youtube/useVideoLoader";
 import useYoutubePlayer from "@/hooks/youtube/useYoutubePlayer";
-import useVideoUpdate from "@/hooks/youtube/useVideoUpdate";
+// import useVideoUpdate from "@/hooks/youtube/useVideoUpdate";
 // import useRoom from "@/hooks/room/useRoom";
 
 export default function VideoPlayer() {
@@ -14,7 +14,7 @@ export default function VideoPlayer() {
   // usePlaybackControll();
   usePlaybackSocket();
   useVideoLoader();
-  useVideoUpdate();
+  // useVideoUpdate();
 
   return (
     <div
