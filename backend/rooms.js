@@ -1,6 +1,6 @@
 const rooms = new Map();
 
-export function getOrCreateRoom(roomId, socketId, username, clientId) {
+export function getOrCreateRoom(roomId) {
   if (!rooms.has(roomId)) {
     rooms.set(roomId, {
       id: roomId,
@@ -50,12 +50,8 @@ export function removeUserFromRoom(roomId, clientId) {
   return { room, user };
 }
 
-export function getRoomData(room, clientTime) {
+export function getRoomData(room) {
   if (!room) return null;
-  let time = room.currentTime;
-  if (room.isPlaying) {
-    time += (Date.now() - clientTime) / 1000;
-  }
   return {
     id: room.id,
     users: Array.from(room.users.values()).map((user) => ({
@@ -63,10 +59,10 @@ export function getRoomData(room, clientTime) {
       username: user.username,
       isAdmin: user.isAdmin,
       clientId: user.clientId,
-      status: user.status || { isSynced: true, currentTime: time },
+      status: user.status || { isSynced: true, currentTime: room.currentTime }, // currentTime = 0 ---> room.currentTime
     })),
     currentVideoId: room.currentVideoId,
-    currentTime: time,
+    currentTime: room.currentTime,
     isPlaying: room.isPlaying,
   };
 }

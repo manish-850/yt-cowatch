@@ -18,7 +18,7 @@ export default function RoomControls() {
 
   const handleChangeVideo = (videoId) => {
     if (socket) {
-      socket.emit("change-video", { videoId, clientTime: Date.now() });
+      socket.emit("change-video", { videoId });
     }
   };
 

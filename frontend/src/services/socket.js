@@ -11,7 +11,7 @@ export function getSocket() {
 
 export const initSocket = () => {
   getSocket();
-  socket.connect()
+  socket.connect();
   return () => {
     socket.disconnect();
     socket = null;
@@ -30,7 +30,6 @@ export const updateVideo = (player, roomData) => {
         videoId: roomData?.currentVideoId,
         isPlaying: state === 1,
         currentTime: player.getCurrentTime(),
-        clientTime : Date.now()
       });
     }
   }, 3000);

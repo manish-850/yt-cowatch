@@ -18,7 +18,7 @@ const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
 
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: FRONTEND_URL,
     credentials: true,
   }),
 );
@@ -31,7 +31,7 @@ app.get("/health", (req, res) => {
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.FRONTEND_URL,
+    origin: FRONTEND_URL,
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -42,7 +42,7 @@ io.on("connection", (socket) => {
   let currentUsername = null;
   let currentClientId = null;
 
-  socket.on("join-room", ({ roomId, username, clientId, clientTime }) => {
+  socket.on("join-room", ({ roomId, username, clientId }) => {
     currentRoomId = roomId;
     currentUsername = username;
     currentClientId = clientId;
@@ -50,7 +50,7 @@ io.on("connection", (socket) => {
     socket.join(roomId);
     const { room } = addUserToRoom(roomId, socket.id, username, clientId);
 
-    io.to(roomId).emit("room-update", getRoomData(room, clientTime));
+    io.to(roomId).emit("room-update", getRoomData(room));
     io.to(roomId).emit("chat-message", {
       sender: "System",
       text: `${username} joined the room.`,
@@ -65,13 +65,13 @@ io.on("connection", (socket) => {
     });
   });
 
-  socket.on("change-video", ({ videoId, clientTime }) => {
+  socket.on("change-video", ({ videoId }) => {
     if (!currentRoomId) return;
     const room = getOrCreateRoom(currentRoomId);
     const activeUser = room.users.get(currentClientId);
     if (activeUser && activeUser.isAdmin) {
       updateRoomVideo(currentRoomId, videoId);
-      io.to(currentRoomId).emit("room-update", getRoomData(room, clientTime));
+      io.to(currentRoomId).emit("room-update", getRoomData(room));
       io.to(currentRoomId).emit("chat-message", {
         sender: "System",
         text: `${currentUsername} changed the video.`,
@@ -95,20 +95,19 @@ io.on("connection", (socket) => {
         currentTime: room.currentTime,
         serverTime: room.serverTime,
       });
-      io.to(currentRoomId).emit("room-update", getRoomData(room, clientTime));
+      io.to(currentRoomId).emit("room-update", getRoomData(room));
     }
   });
 
   socket.on(
     "report-status",
-    ({ videoId, isPlaying, currentTime, clientTime }) => {
+    ({ videoId, isPlaying, currentTime }) => {
       if (!currentRoomId) return;
       const room = getOrCreateRoom(currentRoomId);
       const activeUser = room.users.get(currentClientId);
       console.log("Room : ", room);
       if (activeUser) {
         let roomTime = room.currentTime;
-        roomTime += (Date.now() - clientTime) / 1000;
         const idMatch = videoId === room.currentVideoId;
         const playMatch = isPlaying === room.isPlaying;
         const timeMatch = Math.abs(currentTime - roomTime) < 1;
@@ -116,10 +115,10 @@ io.on("connection", (socket) => {
           idMatch && (room.isPlaying ? playMatch && timeMatch : true);
         activeUser.status = {
           isSynced,
-          currentTime: roomTime,
+          currentTime,
         };
         io.to(currentRoomId).emit("room-update", {
-          ...getRoomData(room, clientTime),
+          ...getRoomData(room),
           serverTime: Date.now(),
         });
       }

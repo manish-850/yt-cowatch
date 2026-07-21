@@ -42,14 +42,11 @@ const useYoutubePlayer = () => {
           console.log("YT READY : ", event.data);
           playerRef.current = event.target;
           toast.success("YT player ready");
-          if (handlePlayerReady) {
-            handlePlayerReady();
-          }
-          if (!isAdmin) {
-            syncToTargetTime(playerRef, roomDataRef, false);
-          }
+          if (handlePlayerReady) handlePlayerReady();
+          if (!isAdmin) syncToTargetTime(playerRef, roomDataRef);
         },
         onStateChange: (event) => {
+          console.log("state change", playerRef.current.getCurrentTime());
           if (isAdmin) {
             if (handlePlaybackControl) {
               if (event.data === 1) {
@@ -58,8 +55,7 @@ const useYoutubePlayer = () => {
                 handlePlaybackControl(false, event.target.getCurrentTime());
               }
             }
-          } else if (event.data === 1)
-            syncToTargetTime(playerRef, roomDataRef, true);
+          } else if (event.data === 1) syncToTargetTime(playerRef, roomDataRef);
         },
       },
     });

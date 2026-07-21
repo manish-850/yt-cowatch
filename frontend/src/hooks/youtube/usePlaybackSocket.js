@@ -7,16 +7,13 @@ const usePlaybackSocket = () => {
   useEffect(() => {
     if (!socket) return;
 
-    const handleSync = ({ isPlaying, currentTime, serverTime }) => {
+    const handleSync = ({ isPlaying, currentTime }) => {
       console.log("handle sync fired");
       const player = playerRef.current;
       if (!player || typeof player.getPlayerState !== "function") return;
 
       const playerState = player.getPlayerState();
       const currentVideoTime = player.getCurrentTime();
-      // added delay for better sync
-      const delay = Date.now() - serverTime;
-      currentTime += delay;
 
       if (!isPlaying || Math.abs(currentVideoTime - currentTime) > 1) {
         player.seekTo(currentTime, true);
