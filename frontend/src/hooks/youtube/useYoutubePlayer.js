@@ -6,14 +6,15 @@ import { handlePlaybackControl } from "@/utils/handlePlaybackControl";
 import { toast } from "sonner";
 
 const useYoutubePlayer = () => {
-  const { playerRef } = usePlayer();
-  const { roomDataRef, isAdmin, videoId } = useRoom();
+  const { playerRef, isMuted } = usePlayer();
+  const { roomDataRef, isAdmin, videoId, roomId } = useRoom();
   const iframeId = "yt-player";
 
   const handlePlayerReady = () => {
     const player = playerRef.current;
     const roomData = roomDataRef.current;
-    player.mute();
+    if (isMuted) player.mute();
+    else player.unmute();
     if (roomData) {
       player.seekTo(roomData.currentTime, true);
       if (roomData.isPlaying) player.playVideo();
@@ -90,7 +91,7 @@ const useYoutubePlayer = () => {
         playerRef.current.destroy();
       }
     };
-  }, [isAdmin]);
+  }, [roomId]);
 };
 
 export default useYoutubePlayer;

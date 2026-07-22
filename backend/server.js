@@ -101,7 +101,7 @@ io.on("connection", (socket) => {
 
   socket.on(
     "report-status",
-    ({ videoId, isPlaying, currentTime }) => {
+    ({ videoId, isPlaying, currentTime, clientTime }) => {
       if (!currentRoomId) return;
       const room = getOrCreateRoom(currentRoomId);
       const activeUser = room.users.get(currentClientId);
@@ -110,13 +110,19 @@ io.on("connection", (socket) => {
         let roomTime = room.currentTime;
         const idMatch = videoId === room.currentVideoId;
         const playMatch = isPlaying === room.isPlaying;
-        const timeMatch = Math.abs(currentTime - roomTime) < 1;
+        const delay = roomTime - currentTime;
+        const timeMatch = Math.abs(delay) <= 1;
         const isSynced =
           idMatch && (room.isPlaying ? playMatch && timeMatch : true);
         activeUser.status = {
           isSynced,
           currentTime,
         };
+        // if delay is more than 1 second fire playback-sync event
+        if (!timeMatch) {
+          updateRoomPlayback(currentRoomId, isPlaying, currentTime, clientTime);
+          io.to(currentRoomId).emit("room-update", getRoomData(room));
+        }
         io.to(currentRoomId).emit("room-update", {
           ...getRoomData(room),
           serverTime: Date.now(),

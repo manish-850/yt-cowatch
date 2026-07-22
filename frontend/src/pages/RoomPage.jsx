@@ -1,18 +1,14 @@
 import VideoContainer from "../components/videoPlayer/VideoContainer";
 import Sidebar from "../components/videoPlayer/Sidebar";
-import { useEffect, useState, useMemo } from "react";
-import { useParams } from "react-router-dom";
-import { generateName } from "../utils/username";
+import { useState, useMemo } from "react";
 import Loading from "../components/Loading/Loading";
-import useRoom from "@/hooks/room/useRoom";
 import useSocket from "@/hooks/socket/useSocket";
 import useUpdateRoom from "@/hooks/room/useUpdateRoom";
 import useJoinRoom from "@/hooks/room/useJoinRoom";
 import useUpdateMessage from "@/hooks/room/useUpdateMessage";
+import useInitUsername from "@/hooks/room/useInitUsername";
 
 const RoomPage = () => {
-  const { roomId } = useParams();
-  const { setUsername, isJoined } = useRoom();
   const [isLoading, setIsLoading] = useState(true);
 
   const clientId = useMemo(() => {
@@ -24,17 +20,8 @@ const RoomPage = () => {
     return id;
   }, []);
 
-  useSocket(isJoined);
-
-  useEffect(() => {
-    let uName = localStorage.getItem("username");
-    if (!uName) {
-      uName = generateName();
-      localStorage.setItem("username", uName);
-    }
-    setUsername(uName);
-  }, [roomId]);
-
+  useSocket();
+  useInitUsername();
   useUpdateRoom(setIsLoading, clientId);
   useJoinRoom(clientId);
   useUpdateMessage();
