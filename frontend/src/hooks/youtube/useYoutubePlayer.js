@@ -1,6 +1,6 @@
 import useRoom from "../room/useRoom";
 import usePlayer from "../player/usePlayer";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { syncToTargetTime } from "@/utils/syncToTargetTime";
 import { handlePlaybackControl } from "@/utils/handlePlaybackControl";
 import { toast } from "sonner";
@@ -8,7 +8,23 @@ import { toast } from "sonner";
 const useYoutubePlayer = () => {
   const { playerRef, isMuted } = usePlayer();
   const { roomDataRef, isAdmin, videoId, roomId } = useRoom();
+  const lastTimeRef = useRef(0);
   const iframeId = "yt-player";
+
+  useEffect(() => {
+    if (!videoId || !isAdmin) return;
+    const interval = setInterval(() => {
+      const player = playerRef?.current;
+      if (!player) return () => clearInterval(interval);
+      const now = player.getCurrentTime();
+      const diff = now - lastTimeRef.current;
+      if (Math.abs(diff) > 2)
+        handlePlaybackControl(player.getPlayerState() === 1, now); // user jumped
+
+      lastTimeRef.current = now;
+    }, 300);
+    return () => clearInterval(interval);
+  }, [isAdmin, videoId]);
 
   const handlePlayerReady = () => {
     const player = playerRef.current;
@@ -52,7 +68,8 @@ const useYoutubePlayer = () => {
                 handlePlaybackControl(false, event.target.getCurrentTime());
               }
             }
-          } else if (event.data === 1) syncToTargetTime(playerRef, roomDataRef);
+          } else if (event.data === 1)
+            syncToTargetTime(playerRef, roomDataRef);
         },
       },
     });

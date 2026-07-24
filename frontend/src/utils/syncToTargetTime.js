@@ -1,16 +1,19 @@
 export const syncToTargetTime = (playerRef, roomDataRef) => {
   const player = playerRef.current;
-  const roomData = roomDataRef.current;
-  if (!player || !roomData || typeof player.getCurrentTime !== "function")
-    return;
+  const room = roomDataRef.current;
 
-  let targetTime = roomData.currentTime;
-  if (roomData.isPlaying && roomData.serverTime) {
-    targetTime += (Date.now() - roomData.serverTime) / 1000;
+  if (!player || !room) return;
+
+  let targetTime = room.currentTime;
+
+  if (room.isPlaying) {
+    targetTime += (Date.now() - room.serverTime) / 1000;
   }
 
-  const currentVideoTime = player.getCurrentTime();
-  if (Math.abs(currentVideoTime - targetTime) > 1) {
+  const currentTime = player.getCurrentTime();
+  const drift = targetTime - currentTime;
+
+  if (Math.abs(drift) > 1) {
     player.seekTo(targetTime, true);
   }
 };

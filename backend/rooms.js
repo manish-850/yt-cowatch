@@ -55,15 +55,19 @@ export function getRoomData(room) {
   return {
     id: room.id,
     users: Array.from(room.users.values()).map((user) => ({
-      id: user.clientId,
+      id: user.id,
       username: user.username,
       isAdmin: user.isAdmin,
       clientId: user.clientId,
-      status: user.status || { isSynced: true, currentTime: room.currentTime }, // currentTime = 0 ---> room.currentTime
+      status: user.status || {
+        isSynced: true,
+        currentTime: room.currentTime,
+      },
     })),
     currentVideoId: room.currentVideoId,
     currentTime: room.currentTime,
     isPlaying: room.isPlaying,
+    serverTime: room.serverTime,
   };
 }
 
@@ -77,12 +81,17 @@ export function updateRoomVideo(roomId, videoId) {
   return room;
 }
 
-export function updateRoomPlayback(roomId, isPlaying, currentTime, clientTime) {
+export function updateRoomPlayback(roomId, isPlaying, currentTime) {
   const room = rooms.get(roomId);
-  const delay = (Date.now() - clientTime) / 1000;
   if (!room) return null;
   room.isPlaying = isPlaying;
-  room.currentTime = currentTime + delay;
+  room.currentTime = currentTime;
   room.serverTime = Date.now();
   return room;
+}
+
+export function getExpectedRoomTime(room) {
+  if (!room.isPlaying) return room.currentTime;
+
+  return room.currentTime + (Date.now() - room.serverTime) / 1000;
 }

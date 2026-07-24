@@ -10,6 +10,7 @@ import {
   updateRoomVideo,
   updateRoomPlayback,
   getOrCreateRoom,
+  getExpectedRoomTime,
 } from "./rooms.js";
 
 const app = express();
@@ -91,7 +92,7 @@ io.on("connection", (socket) => {
         clientTime,
       );
       socket.to(currentRoomId).emit("playback-sync", {
-        isPlaying,
+        isPlaying: room.isPlaying,
         currentTime: room.currentTime,
         serverTime: room.serverTime,
       });
@@ -99,37 +100,38 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on(
-    "report-status",
-    ({ videoId, isPlaying, currentTime, clientTime }) => {
-      if (!currentRoomId) return;
-      const room = getOrCreateRoom(currentRoomId);
-      const activeUser = room.users.get(currentClientId);
-      console.log("Room : ", room);
-      if (activeUser) {
-        let roomTime = room.currentTime;
-        const idMatch = videoId === room.currentVideoId;
-        const playMatch = isPlaying === room.isPlaying;
-        const delay = roomTime - currentTime;
-        const timeMatch = Math.abs(delay) <= 1;
-        const isSynced =
-          idMatch && (room.isPlaying ? playMatch && timeMatch : true);
-        activeUser.status = {
-          isSynced,
-          currentTime,
-        };
-        // if delay is more than 1 second fire playback-sync event
-        if (!timeMatch) {
-          updateRoomPlayback(currentRoomId, isPlaying, currentTime, clientTime);
-          io.to(currentRoomId).emit("room-update", getRoomData(room));
-        }
-        io.to(currentRoomId).emit("room-update", {
-          ...getRoomData(room),
-          serverTime: Date.now(),
+  socket.on("report-status", ({ videoId, isPlaying, currentTime }) => {
+    if (!currentRoomId) return;
+    let room = getOrCreateRoom(currentRoomId);
+    const activeUser = room.users.get(currentClientId);
+    console.log("Room : ", room);
+    if (activeUser) {
+      const idMatch = videoId === room.currentVideoId;
+      const playMatch = isPlaying === room.isPlaying;
+      const expectedTime = getExpectedRoomTime(room);
+      const drift = expectedTime - currentTime;
+      const timeMatch = Math.abs(drift) <= 1;
+      const isSynced =
+        idMatch && (room.isPlaying ? playMatch && timeMatch : true);
+      activeUser.status = {
+        currentTime,
+        drift,
+        isSynced,
+        lastReport: Date.now(),
+      };
+      if (Math.abs(drift) > 1) {
+        socket.emit("playback-sync", {
+          currentTime: room.currentTime,
+          serverTime: room.serverTime,
+          isPlaying: room.isPlaying,
+          currentVideoId: room.currentVideoId,
         });
       }
-    },
-  );
+      // io.to(currentRoomId).emit("room-update", {
+      //   ...getRoomData(room),
+      // });
+    }
+  });
 
   socket.on("disconnect", () => {
     if (!currentRoomId) return;
