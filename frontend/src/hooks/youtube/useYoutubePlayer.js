@@ -1,27 +1,40 @@
 import useRoom from "../room/useRoom";
 import usePlayer from "../player/usePlayer";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { syncToTargetTime } from "@/utils/syncToTargetTime";
 import { handlePlaybackControl } from "@/utils/handlePlaybackControl";
 import { toast } from "sonner";
 
 const useYoutubePlayer = () => {
-  const { playerRef } = usePlayer();
-  const { roomDataRef, isAdmin, videoId } = useRoom();
+  const { playerRef, isMuted } = usePlayer();
+  const { roomDataRef, isAdmin, videoId, roomId } = useRoom();
+  const lastTimeRef = useRef(0);
   const iframeId = "yt-player";
+
+  useEffect(() => {
+    if (!videoId || !isAdmin) return;
+    const interval = setInterval(() => {
+      const player = playerRef?.current;
+      if (!player) return () => clearInterval(interval);
+      const now = player.getCurrentTime();
+      const diff = now - lastTimeRef.current;
+      if (Math.abs(diff) > 2)
+        handlePlaybackControl(player.getPlayerState() === 1, now); // user jumped
+
+      lastTimeRef.current = now;
+    }, 300);
+    return () => clearInterval(interval);
+  }, [isAdmin, videoId]);
 
   const handlePlayerReady = () => {
     const player = playerRef.current;
     const roomData = roomDataRef.current;
-    console.log("roomData:", roomDataRef.current);
-    player.mute();
+    if (isMuted) player.mute();
+    else player.unmute();
     if (roomData) {
       player.seekTo(roomData.currentTime, true);
-      if (roomData.isPlaying) {
-        player.playVideo();
-      } else {
-        player.pauseVideo();
-      }
+      if (roomData.isPlaying) player.playVideo();
+      else player.pauseVideo();
     }
   };
   const initPlayer = () => {
@@ -42,14 +55,11 @@ const useYoutubePlayer = () => {
           console.log("YT READY : ", event.data);
           playerRef.current = event.target;
           toast.success("YT player ready");
-          if (handlePlayerReady) {
-            handlePlayerReady();
-          }
-          if (!isAdmin) {
-            syncToTargetTime(playerRef, roomDataRef, false);
-          }
+          if (handlePlayerReady) handlePlayerReady();
+          if (!isAdmin) syncToTargetTime(playerRef, roomDataRef);
         },
         onStateChange: (event) => {
+          console.log("state change", playerRef.current.getCurrentTime());
           if (isAdmin) {
             if (handlePlaybackControl) {
               if (event.data === 1) {
@@ -59,7 +69,7 @@ const useYoutubePlayer = () => {
               }
             }
           } else if (event.data === 1)
-            syncToTargetTime(playerRef, roomDataRef, true);
+            syncToTargetTime(playerRef, roomDataRef);
         },
       },
     });
@@ -98,7 +108,7 @@ const useYoutubePlayer = () => {
         playerRef.current.destroy();
       }
     };
-  }, [isAdmin]);
+  }, [roomId]);
 };
 
 export default useYoutubePlayer;

@@ -11,30 +11,13 @@ export function getSocket() {
 
 export const initSocket = () => {
   getSocket();
-  socket.connect()
+  socket.connect();
   return () => {
     socket.disconnect();
     socket = null;
   };
 };
 
-export const updateVideo = (player, roomData) => {
-  if (!socket || !socket.connected) return;
-  const interval = setInterval(() => {
-    if (
-      typeof player.getCurrentTime === "function" &&
-      typeof player.getPlayerState === "function"
-    ) {
-      const state = player.getPlayerState();
-      socket?.emit("report-status", {
-        videoId: roomData?.currentVideoId || "6KcV1C1Ui5s",
-        isPlaying: state === 1,
-        currentTime: player.getCurrentTime(),
-      });
-    }
-  }, 3000);
-  return () => clearInterval(interval);
-};
 
 export const handleSendMessage = (text) => {
   if (!socket || !socket.connected) return;

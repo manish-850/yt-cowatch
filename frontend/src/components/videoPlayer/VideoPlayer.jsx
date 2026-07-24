@@ -1,9 +1,9 @@
 import "./videoPlayer.css";
-import usePlaybackSocket from "@/hooks/youtube/usePlaybackSocket";
+import usePlaybackSync from "@/hooks/youtube/usePlaybackSync";
+import useReportStatus from "@/hooks/youtube/useReportStatus";
 // import usePlaybackControll from "@/hooks/youtube/usePlaybackControll";
 import useVideoLoader from "@/hooks/youtube/useVideoLoader";
 import useYoutubePlayer from "@/hooks/youtube/useYoutubePlayer";
-import useVideoUpdate from "@/hooks/youtube/useVideoUpdate";
 // import useRoom from "@/hooks/room/useRoom";
 
 export default function VideoPlayer() {
@@ -12,9 +12,9 @@ export default function VideoPlayer() {
 
   useYoutubePlayer();
   // usePlaybackControll();
-  usePlaybackSocket();
   useVideoLoader();
-  useVideoUpdate();
+  useReportStatus()
+  usePlaybackSync();
 
   return (
     <div

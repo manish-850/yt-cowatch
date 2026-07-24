@@ -11,7 +11,7 @@ const useJoinRoom = (clientId) => {
       username: localStorage.getItem("username"),
       clientId,
     });
-  },[roomId]);
+  }, [roomId]);
 };
 
 export default useJoinRoom;
