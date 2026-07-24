@@ -6,16 +6,19 @@ Built with **React**, **Express**, **Socket.IO**, and the **YouTube IFrame API**
 
 > **Status:** Active Development
 
-> **Acknowledgement** This project is fork of **yt-cowatch** by GitUtk.
+> **Acknowledgement:** This project is fork of **yt-cowatch** by GitUtk.
 
 ---
 
 # Features
 
 - Real-time synchronized YouTube playback
+- Server-authoritative synchronization algorithm
+- Automatic playback drift detection and correction
+- Play, pause, seek, and video change synchronization
 - Create and join rooms instantly
 - Admin-controlled playback
-- Live chat
+- Live room chat
 - Automatic room restoration after page refresh
 - Persistent user identity using `clientId`
 - Username persistence with Local Storage
@@ -51,6 +54,26 @@ Built with **React**, **Express**, **Socket.IO**, and the **YouTube IFrame API**
 
 ---
 
+# Architecture
+
+```
+Admin
+   │
+   │ playback-control
+   ▼
+Server (Source of Truth)
+   │
+   ├── maintains room playback state
+   ├── calculates expected playback time
+   ├── detects playback drift
+   └── sends playback-sync when required
+            │
+            ▼
+Participants
+```
+
+The server is responsible for maintaining the authoritative playback state, while clients periodically report their playback status. Participants are only resynchronized when playback drift exceeds the allowed threshold, reducing unnecessary synchronization events.
+
 # How It Works
 
 ## Room Creation
@@ -60,14 +83,16 @@ Built with **React**, **Express**, **Socket.IO**, and the **YouTube IFrame API**
 
 ## Synchronization
 
-The admin controls:
+ytsync uses a **server-authoritative synchronization model**.
 
-- Play
-- Pause
-- Seek
-- Change video
+- The room owner (admin) controls playback.
+- The server maintains the authoritative playback state.
+- Clients periodically report their playback status.
+- The server calculates playback drift for every participant.
+- Clients exceeding the allowed drift threshold are automatically resynchronized.
+- `serverTime` is used to compensate for network latency when calculating the expected playback position.
 
-Every connected participant stays synchronized through Socket.IO events.
+This approach keeps playback synchronized even under unstable network conditions.
 
 ## Automatic Reconnection
 
@@ -108,14 +133,16 @@ ytsync
 
 # Improvements Over Original Project
 
-- Refactored project architecture
-- Modular component structure
-- Custom React hooks
+- Completely refactored project architecture
+- Modular React component structure
+- Extensive use of reusable custom hooks
 - Dedicated Socket.IO service layer
 - Improved Context API state management
 - Automatic room restoration after refresh
-- Persistent user identity with `clientId`
-- Cleaner synchronization logic
+- Persistent user identity using `clientId`
+- Server-authoritative synchronization algorithm
+- Playback drift detection and automatic correction
+- Improved synchronization under network latency
 - Reusable UI components with shadcn/ui
 - Better maintainability and scalability
 
@@ -152,11 +179,14 @@ npm start
 
 - Room creation
 - Join room
-- Live synchronization
-- Play/Pause synchronization
-- Seek synchronization
-- Change video synchronization
 - Live chat
+- Play synchronization
+- Pause synchronization
+- Seek synchronization
+- Video change synchronization
+- Server-authoritative synchronization
+- Playback drift detection
+- Automatic playback correction
 - Automatic room restoration
 - Persistent user identity
 - Responsive UI
@@ -166,6 +196,7 @@ npm start
 
 # Roadmap
 
+- Playback buffering indicator
 - Video queue / playlist
 - Room permissions
 - Persistent chat history
